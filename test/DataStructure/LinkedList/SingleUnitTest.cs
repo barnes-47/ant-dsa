@@ -163,14 +163,25 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedEx.GetType().FullName == actualEx.GetType().FullName);
         }
 
-        //[Theory]
-        //[InlineData(1)]
-        //[InlineData(-111)]
-        //[InlineData(0)]
-        //[InlineData(5678)]
-        //public void AddAfter_AddsTwoNodes_WhenEmpty(long testData)
-        //{
-        //    var singly = new Singly();
-        //}
+        [Theory]
+        [InlineData(-44, 1)]
+        [InlineData(20, -111)]
+        [InlineData(55, 0)]
+        [InlineData(876, 5678)]
+        public void AddAfter_AddsTwoNodes_WhenEmpty(long expectedExistingData, long expectedNewData)
+        {
+            var singly = new Singly();
+            var expectedLength = 2UL;
+            var expectedExistingNode = new Node(expectedExistingData);
+
+            singly.AddAfter(expectedExistingNode, expectedNewData);
+
+            Assert.NotNull(singly.Head);
+            Assert.NotNull(singly.Tail);
+            Assert.False(singly.Head.Equals(singly.Tail));
+            Assert.True(expectedLength == singly.Length);
+            Assert.True(expectedExistingData == singly.Head.Data);
+            Assert.True(expectedNewData == singly.Tail.Data);
+        }
     }
 }
