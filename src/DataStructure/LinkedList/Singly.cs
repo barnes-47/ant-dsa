@@ -36,6 +36,11 @@ namespace Ds.LinkedList
             
         }
 
+        public Singly(long value)
+        {
+            AddLast(value);
+        }
+
         public Singly(long[] values)
         {
             foreach (var value in values)
@@ -159,7 +164,9 @@ namespace Ds.LinkedList
             if (IsHead(data))
             {
                 Head = Head.Next;
-                --Length;
+                if (--Length == 0)
+                    Tail = null;
+
                 return true;
             }
 
@@ -174,6 +181,7 @@ namespace Ds.LinkedList
                         Tail = previous;
                     current.Next = null;
                     --Length;
+
                     return true;
                 }
                 previous = current;
