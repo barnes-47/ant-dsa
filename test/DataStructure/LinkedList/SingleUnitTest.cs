@@ -1,7 +1,5 @@
 ﻿using Ds.LinkedList;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Ds.Test.LinkedList
@@ -61,7 +59,7 @@ namespace Ds.Test.LinkedList
         {
             var singly = new Singly();
             var mockData = Array.ConvertAll(testStr.Split(','), long.Parse);
-            foreach(var d in mockData)
+            foreach (var d in mockData)
             {
                 singly.AddFirst(d);
             }
@@ -219,7 +217,7 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedNewData == singly.Tail.Data);
 
             var current = singly.Head.Next;
-            while(current != null)
+            while (current != null)
             {
                 if (current.Next.Next == null)
                 {
@@ -257,7 +255,7 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedLength == singly.Length);
 
             var current = singly.Head;
-            while(current != null)
+            while (current != null)
             {
                 if (current.Data == expectedExistingData)
                 {
@@ -309,6 +307,119 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedHeadData == singly.Head.Data);
             Assert.True(expectedTailData == singly.Tail.Data);
             Assert.True(expectedNewData == singly.Head.Next.Data);
+        }
+
+        [Theory]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 1011, true)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 2, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", -3, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 4, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 0, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", -5, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 6, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 7, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 8, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 9, false)]
+        public void IsHead_ReturnsFalse_WhenDataIsNotEqualToHeadData_AndTrue_WhenDataIsEqualToHeadData(
+            string fakeStr
+            , long testData
+            , bool expectedResult)
+        {
+            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var expectedLength = singly.Length;
+            var expectedHeadData = singly.Head.Data;
+
+            var actualResult = singly.IsHead(testData);
+
+            Assert.NotNull(singly.Head);
+            Assert.NotNull(singly.Tail);
+            Assert.False(singly.Head.Equals(singly.Tail));
+            Assert.False(singly.IsNull);
+            Assert.False(singly.IsEmpty);
+            Assert.True(expectedLength == singly.Length);
+            Assert.True(expectedResult == actualResult);
+
+            if (expectedResult)
+                Assert.True(testData == singly.Head.Data);
+            else
+                Assert.False(testData == singly.Head.Data);
+        }
+
+        [Theory]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 1011, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 2, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", -3, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 4, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 0, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", -5, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 6, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 7, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 8, false)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 9, true)]
+        public void IsTail_ReturnsFalse_WhenDataIsNotEqualToTailData_AndTrue_WhenDataIsEqualToTailData(
+            string fakeStr
+            , long testData
+            , bool expectedResult)
+        {
+            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var expectedLength = singly.Length;
+            var expectedTailData = singly.Tail.Data;
+
+            var actualResult = singly.IsTail(testData);
+
+            Assert.NotNull(singly.Head);
+            Assert.NotNull(singly.Tail);
+            Assert.False(singly.Head.Equals(singly.Tail));
+            Assert.False(singly.IsNull);
+            Assert.False(singly.IsEmpty);
+            Assert.True(expectedLength == singly.Length);
+            Assert.True(expectedResult == actualResult);
+
+            if (expectedResult)
+                Assert.True(testData == singly.Tail.Data);
+            else
+                Assert.False(testData == singly.Tail.Data);
+        }
+
+        [Theory]
+        [InlineData("1011,2,-3,4,6", 1011, true)]
+        [InlineData("1011,2,-3,4,6", 2, true)]
+        [InlineData("1011,2,-3,4,6", -3, true)]
+        [InlineData("1011,2,-3,4,6", 4, true)]
+        [InlineData("1011,2,-3,4,6", 6, true)]
+        [InlineData("1011,2,-3,4,6", 76, false)]
+        [InlineData("1011,2,-3,4,6", 99999, false)]
+        [InlineData("1011,2,-3,4,6", -13453, false)]
+        [InlineData("1011,2,-3,4,6", -1, false)]
+        [InlineData("1011,2,-3,4,6", 0, false)]
+        public void Exists_ReturnsFalse_WhenDataDoesNotExistsInTheList_AndTrue_WhenDataExistsInTheList(
+            string fakeStr
+            , long testData
+            , bool expectedResult)
+        {
+            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var expectedLength = singly.Length;
+            var expectedHead = singly.Head;
+            var expectedTail = singly.Tail;
+
+            var actualResult = singly.Exists(testData);
+
+            Assert.NotNull(singly.Head);
+            Assert.NotNull(singly.Tail);
+            Assert.False(singly.Head.Equals(singly.Tail));
+            Assert.False(singly.IsNull);
+            Assert.False(singly.IsEmpty);
+            Assert.True(singly.Head.Equals(expectedHead));
+            Assert.True(expectedHead.Data == singly.Head.Data);
+            Assert.True(singly.Tail.Equals(expectedTail));
+            Assert.True(expectedTail.Data == singly.Tail.Data);
+            Assert.True(expectedLength == singly.Length);
+            Assert.True(expectedResult == actualResult);
+
+            if (expectedResult)
+                Assert.True(actualResult);
+            else
+                Assert.False(actualResult);
         }
     }
 }
