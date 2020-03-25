@@ -8,12 +8,17 @@ namespace Ds.Test.LinkedList
 {
     public class SingleUnitTest
     {
+        #region Private Constants
+        private const string ExpectedMessageWhenEmpty = "The singly linked list is empty.";
+        #endregion
+
         [Theory]
         [InlineData(1)]
         [InlineData(-111)]
         [InlineData(0)]
         [InlineData(5678)]
-        public void AddFirst_ThrowsNullReferenceException_WhenNull(long testData)
+        public void AddFirst_ThrowsNullReferenceException_WhenNull(
+            long testData)
         {
             Singly singly = null;
             var expectedEx = new NullReferenceException();
@@ -29,7 +34,8 @@ namespace Ds.Test.LinkedList
         [InlineData(-111)]
         [InlineData(0)]
         [InlineData(5678)]
-        public void AddFirst_AddsOneNode_WhenEmpty(long testData)
+        public void AddFirst_AddsOneNode_WhenEmpty(
+            long testData)
         {
             var singly = new Singly();
             var length = 1UL;
@@ -50,7 +56,8 @@ namespace Ds.Test.LinkedList
         [InlineData("1,2,-3,4,0,-5,6,7,8,9")]
         [InlineData("3,8,1,5,-2,-9,7,6,0,4")]
         [InlineData("12,42,57,99,87,21,56,93,36,54")]
-        public void AddFirst_AddsMultipleNodes_WhenEmpty(string testStr)
+        public void AddFirst_AddsMultipleNodes_WhenEmpty(
+            string testStr)
         {
             var singly = new Singly();
             var mockData = Array.ConvertAll(testStr.Split(','), long.Parse);
@@ -82,7 +89,8 @@ namespace Ds.Test.LinkedList
         [InlineData(-111)]
         [InlineData(0)]
         [InlineData(5678)]
-        public void AddLast_ThrowsNullReferenceException_WhenNull(long testData)
+        public void AddLast_ThrowsNullReferenceException_WhenNull(
+            long testData)
         {
             Singly singly = null;
             var expectedEx = new NullReferenceException();
@@ -98,7 +106,8 @@ namespace Ds.Test.LinkedList
         [InlineData(-111)]
         [InlineData(0)]
         [InlineData(5678)]
-        public void AddLast_AddsOneNode_WhenEmpty(long testData)
+        public void AddLast_AddsOneNode_WhenEmpty(
+            long testData)
         {
             var singly = new Singly();
             var length = 1UL;
@@ -119,7 +128,8 @@ namespace Ds.Test.LinkedList
         [InlineData("1,2,-3,4,0,-5,6,7,8,9")]
         [InlineData("3,8,1,5,-2,-9,7,6,0,4")]
         [InlineData("12,42,57,99,87,21,56,93,36,54")]
-        public void AddLast_AddsMultipleNodes_WhenEmpty(string testStr)
+        public void AddLast_AddsMultipleNodes_WhenEmpty(
+            string testStr)
         {
             var singly = new Singly();
             var mockData = Array.ConvertAll(testStr.Split(','), long.Parse);
@@ -146,42 +156,159 @@ namespace Ds.Test.LinkedList
         }
 
         [Theory]
-        [InlineData(1)]
-        [InlineData(-111)]
-        [InlineData(0)]
-        [InlineData(5678)]
-        public void AddAfter_ThrowsArgumentNullException_WhenNodeIsNull(long testData)
+        [InlineData(22, 45)]
+        [InlineData(656577, 43455)]
+        [InlineData(2, 7890)]
+        public void AddAfter_ThrowsException_WhenEmpty(
+            long expextedExistingData
+            , long expectedNewData)
         {
             var singly = new Singly();
-            var expectedEx = new ArgumentNullException("existingNode");
-            Node testNode = null;
+            var expectedEx = new Exception(ExpectedMessageWhenEmpty);
 
-            var actualEx = Assert.Throws<ArgumentNullException>(() => singly.AddAfter(testNode, testData));
+            var actualEx = Assert.Throws<Exception>(() => singly.AddAfter(expextedExistingData, expectedNewData));
 
-            Assert.True(expectedEx.ParamName == actualEx.ParamName);
             Assert.True(expectedEx.Message == actualEx.Message);
             Assert.True(expectedEx.GetType().FullName == actualEx.GetType().FullName);
         }
 
         [Theory]
-        [InlineData(-44, 1)]
-        [InlineData(20, -111)]
-        [InlineData(55, 0)]
-        [InlineData(876, 5678)]
-        public void AddAfter_AddsTwoNodes_WhenEmpty(long expectedExistingData, long expectedNewData)
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 1011, 4444)]
+        [InlineData("67,2,-3,4,0,-5,6,7,8,9", 67, 7888)]
+        [InlineData("3993,2,-3,4,0,-5,6,7,8,9", 3993, 3888)]
+        public void AddAfter_AddsNewNodeAfterHead_WhenExistingDataIsEqualToHeadData(
+            string fakeStr
+            , long expectedExistingData
+            , long expectedNewData)
         {
-            var singly = new Singly();
-            var expectedLength = 2UL;
-            var expectedExistingNode = new Node(expectedExistingData);
+            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var expectedLength = singly.Length + 1UL;
 
-            singly.AddAfter(expectedExistingNode, expectedNewData);
+            singly.AddAfter(expectedExistingData, expectedNewData);
 
             Assert.NotNull(singly.Head);
             Assert.NotNull(singly.Tail);
             Assert.False(singly.Head.Equals(singly.Tail));
+            Assert.False(singly.IsNull);
+            Assert.False(singly.IsEmpty);
             Assert.True(expectedLength == singly.Length);
             Assert.True(expectedExistingData == singly.Head.Data);
+            Assert.True(expectedNewData == singly.Head.Next.Data);
+        }
+
+        [Theory]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 9, 4444)]
+        [InlineData("67,2,-3,4,0,-5,6,7,8,9090", 9090, 7888)]
+        [InlineData("3993,2,-3,4,0,-5,6,7,8,2323", 2323, 3888)]
+        public void AddAfter_AddsNewNodeAfterTail_WhenExistingDataIsEqualToTailData(
+            string fakeStr
+            , long expectedExistingData
+            , long expectedNewData)
+        {
+            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var expectedLength = singly.Length + 1UL;
+
+            singly.AddAfter(expectedExistingData, expectedNewData);
+
+            Assert.NotNull(singly.Head);
+            Assert.NotNull(singly.Tail);
+            Assert.False(singly.Head.Equals(singly.Tail));
+            Assert.False(singly.IsNull);
+            Assert.False(singly.IsEmpty);
+            Assert.True(expectedLength == singly.Length);
             Assert.True(expectedNewData == singly.Tail.Data);
+
+            var current = singly.Head.Next;
+            while(current != null)
+            {
+                if (current.Next.Next == null)
+                {
+                    Assert.True(expectedExistingData == current.Data);
+                    break;
+                }
+                current = current.Next;
+            }
+        }
+
+        [Theory]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 2, 4444)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", -3, 232)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 4, 7474)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 0, 842)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", -5, 159)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 6, 7823940)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 7, 676686)]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 8, 97097203)]
+        public void AddAfter_AddsNewNodeAfterTheNodeContainingTheExistingData(
+            string fakeStr
+            , long expectedExistingData
+            , long expectedNewData)
+        {
+            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var expectedLength = singly.Length + 1;
+
+            singly.AddAfter(expectedExistingData, expectedNewData);
+
+            Assert.NotNull(singly.Head);
+            Assert.NotNull(singly.Tail);
+            Assert.False(singly.Head.Equals(singly.Tail));
+            Assert.False(singly.IsNull);
+            Assert.False(singly.IsEmpty);
+            Assert.True(expectedLength == singly.Length);
+
+            var current = singly.Head;
+            while(current != null)
+            {
+                if (current.Data == expectedExistingData)
+                {
+                    Assert.True(expectedExistingData == current.Data);
+                    Assert.True(expectedNewData == current.Next.Data);
+                    break;
+                }
+                current = current.Next;
+            }
+        }
+
+        [Theory]
+        [InlineData(22)]
+        [InlineData(656577)]
+        [InlineData(2)]
+        public void AddAfterHead_ThrowsException_WhenEmpty(
+            long fakeData)
+        {
+            var singly = new Singly();
+            var expectedEx = new Exception("The singly linked list is empty.");
+
+            var actualEx = Assert.Throws<Exception>(() => singly.AddAfterHead(fakeData));
+
+            Assert.True(expectedEx.Message == actualEx.Message);
+            Assert.True(expectedEx.GetType().FullName == actualEx.GetType().FullName);
+        }
+
+        [Theory]
+        [InlineData("1011,2,-3,4,0,-5,6,7,8,9", 1011, 9, 7823940)]
+        [InlineData("1011,2,-3,4,0,-5,6", 1011, 6, 666)]
+        [InlineData("1011,2,-3,4", 1011, 4, 879)]
+        public void AddAfterHead_AddsNewNodeAfterTheHeadNode(
+            string fakeStr
+            , long expectedHeadData
+            , long expectedTailData
+            , long expectedNewData)
+        {
+            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var expectedLength = singly.Length + 1;
+
+            singly.AddAfterHead(expectedNewData);
+
+            Assert.NotNull(singly.Head);
+            Assert.NotNull(singly.Tail);
+            Assert.False(singly.Head.Equals(singly.Tail));
+            Assert.False(singly.IsNull);
+            Assert.False(singly.IsEmpty);
+            Assert.True(expectedLength == singly.Length);
+            Assert.True(expectedHeadData == singly.Head.Data);
+            Assert.True(expectedTailData == singly.Tail.Data);
+            Assert.True(expectedNewData == singly.Head.Next.Data);
         }
     }
 }

@@ -18,6 +18,10 @@ namespace Ds.LinkedList
 
     public class Singly
     {
+        #region Private Constants
+        public const string ExceptionMessageWhenEmpty = "The singly linked list is empty.";
+        #endregion
+
         #region Public Getters
         public Node Head { get; private set; }
         public Node Tail { get; private set; }
@@ -26,7 +30,34 @@ namespace Ds.LinkedList
         public bool IsEmpty => Length == 0 && Head == null && Tail == null;
         #endregion
 
+        #region Public Constructors
+        public Singly()
+        {
+            
+        }
+
+        public Singly(long[] values)
+        {
+            foreach (var value in values)
+            {
+                AddLast(value);
+            }
+        }
+        #endregion
+
         #region Public Methods
+        /// <summary>
+        /// Adds a newly created node with data passed, at the end of the list.
+        /// Tail now points to this newly added node.
+        /// </summary>
+        /// <param name="data"></param>
+        public void Add(long data) => AddLast(data);
+
+        /// <summary>
+        /// Adds a newly created node with data passed, at the start of the list.
+        /// Head now points to this newly added node.
+        /// </summary>
+        /// <param name="data"></param>
         public void AddFirst(long data)
         {
             var newNode = new Node(data);
@@ -42,6 +73,11 @@ namespace Ds.LinkedList
             ++Length;
         }
         
+        /// <summary>
+        /// Adds a newly created node with data passed, at the end of the list.
+        /// Tail now points to this newly added node.
+        /// </summary>
+        /// <param name="data"></param>
         public void AddLast(long data)
         {
             var newNode = new Node(data);
@@ -57,102 +93,99 @@ namespace Ds.LinkedList
             ++Length;
         }
 
-        public void AddAfter(Node existingNode, long data) => AddAfter(existingNode, new Node(data));
-        public void AddAfter(Node existingNode, Node newNode)
+        /// <summary>
+        /// Adds a new node containing newData after an existing node containing existingData.
+        /// </summary>
+        /// <param name="existingData"></param>
+        /// <param name="newData"></param>
+        public void AddAfter(long existingData, long newData)
         {
-            if (existingNode == null)
-                throw new ArgumentNullException(nameof(existingNode));
             if (IsEmpty)
+                throw new Exception(ExceptionMessageWhenEmpty);
+            if (IsHead(existingData))
             {
-                Head = existingNode;
-                Head.Next = Tail = newNode;
-                Length += 2;
-
+                AddAfterHead(newData);
                 return;
             }
-            if (IsHead(existingNode))
+            if (IsTail(existingData))
             {
-                AddAfterHead(existingNode);
-
-                return;
-            }
-            if (IsTail(existingNode))
-            {
-                AddAfterTail(existingNode);
-
+                AddLast(newData);
                 return;
             }
 
             var current = Head.Next;
             while(current != null)
             {
-                if (current.Data == existingNode.Data)
+                if(current.Data == existingData)
                 {
-                    newNode.Next = existingNode.Next;
-                    existingNode.Next = newNode;
+                    var newNode = new Node(newData)
+                    {
+                        Next = current.Next
+                    };
+                    current.Next = newNode;
                     ++Length;
-
                     break;
                 }
                 current = current.Next;
             }
         }
 
-        public void Delete(long data)
+        /// <summary>
+        /// Adds newly created node with data, after the head of the list.
+        /// Increases the value of Length by 1 after successful insertion of node.
+        /// </summary>
+        /// <param name="data"></param>
+        public void AddAfterHead(long data)
         {
-
+            if (IsEmpty)
+                throw new Exception(ExceptionMessageWhenEmpty);
+            var newNode = new Node(data)
+            {
+                Next = Head.Next
+            };
+            Head.Next = newNode;
+            ++Length;
         }
 
-        public bool IsHead(long data) => IsHead(new Node(data));
+        /// <summary>
+        /// Checks if the node is head or not.
+        /// Compares only data.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool IsHead(long data) => Head.Data == data;
 
-        public bool IsHead(Node node) => Head.Data == node.Data;
+        /// <summary>
+        /// Checks if the node is tail or not.
+        /// Compares only data.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool IsTail(long data) => Tail.Data == data;
 
-        public bool IsTail(long data) => IsTail(new Node(data));
-
-        public bool IsTail(Node node) => Tail.Data == node.Data;
-
-        public bool Exists(long data) => Exists(new Node(data));
-
-        public bool Exists(Node node)
+        /// <summary>
+        /// Checks if the data passed, exists in the list or not.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>true if data exists in the list, false otherwise.</returns>
+        public bool Exists(long data)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
             if (IsEmpty)
                 return false;
-            if (IsHead(node))
+            if (IsHead(data))
                 return true;
-            if (IsTail(node))
+            if (IsTail(data))
                 return true;
 
             var current = Head.Next;
             while(current != null)
             {
-                if (current.Data == node.Data)
+                if (current.Data == data)
                     return true;
                 current = current.Next;
             }
 
             return false;
-        }
-        #endregion
-
-        #region Private Methods
-        private void AddAfterHead(long data) => AddAfterHead(new Node(data));
-
-        private void AddAfterHead(Node node)
-        {
-            node.Next = Head.Next;
-            Head = node;
-            ++Length;
-        }
-
-        private void AddAfterTail(long data) => AddAfterTail(new Node(data));
-
-        private void AddAfterTail(Node node)
-        {
-            Tail.Next = node;
-            Tail = node;
-            ++Length;
         }
         #endregion
     }
