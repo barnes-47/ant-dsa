@@ -12,6 +12,18 @@ namespace Ds.Test.LinkedList
 
         #region Private Common Methods
         private long[] ConvertAllToLong(string commaSeparatedStr) => Array.ConvertAll(commaSeparatedStr.Split(','), long.Parse);
+        private Node GetNode(Singly singly, long data)
+        {
+            var current = singly.Head;
+            while(current != null)
+            {
+                if (current.Data == data)
+                    return current;
+                current = current.Next;
+            }
+
+            return null;
+        }
         #endregion
 
         [Theory]
@@ -505,6 +517,147 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedTail.Data == expectedSingly.Tail.Data);
             Assert.True(expectedLength == actualSingly.Length);
             Assert.True(2 <= actualSingly.Length);
+        }
+
+        [Theory]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", "2,-3,4,-5,6,7,8,9", 1011, 2, 9)]
+        [InlineData("1011,-3,9", "-3,9", 1011, -3, 9)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,4,-5,6,7,8", 9, 1011, 8)]
+        [InlineData("1011,-3,9", "1011,-3", 9, 1011, -3)]
+        public void Delete_DeletesTheHeadOrTailWithAtleastTwoNodeLeftAfterDeletion_WhenTheSpecifiedDataIsInHeadOrTail(
+            string actualStr
+            , string expectedStr
+            , long expectedDataToBeDeleted
+            , long expectedHeadData
+            , long expectedTailData)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedSingly = new Singly(ConvertAllToLong(expectedStr));
+            var expectedHead = GetNode(actualSingly, expectedHeadData);
+            var expectedTail = GetNode(actualSingly, expectedTailData);
+
+            var actualResult = actualSingly.Delete(expectedDataToBeDeleted);
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(expectedSingly.Head);
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(expectedSingly.Tail);
+
+            Assert.False(actualSingly.Head.Equals(actualSingly.Tail));
+            Assert.False(expectedSingly.Head.Equals(expectedSingly.Tail));
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(expectedSingly.IsNull);
+            Assert.False(expectedSingly.IsEmpty);
+            Assert.False(actualSingly.Exists(expectedDataToBeDeleted));
+
+            Assert.True(actualResult);            
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedTail.Data == expectedSingly.Tail.Data);
+            Assert.True(expectedSingly.Length == actualSingly.Length);
+            Assert.True(2 <= actualSingly.Length);
+        }
+
+        [Theory]
+        [InlineData("1,2", "1", 2, 1, 1)]
+        [InlineData("1,2", "2", 1, 2, 2)]
+        public void Delete_DeletesTheHeadOrTailWithOnlyOneNodeLeftAfterDeletion_WhenSpecifiedDataIsInHeadOrTailAndLengthIsTwo(
+            string actualStr
+            , string expectedStr
+            , long expectedDataToBeDeleted
+            , long expectedHeadData
+            , long expectedTailData)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedSingly = new Singly(ConvertAllToLong(expectedStr));
+            var expectedHead = GetNode(actualSingly, expectedHeadData);
+            var expectedTail = GetNode(actualSingly, expectedTailData);
+
+            var actualResult = actualSingly.Delete(expectedDataToBeDeleted);
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(expectedSingly.Head);
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(expectedSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(expectedSingly.IsNull);
+            Assert.False(expectedSingly.IsEmpty);
+            Assert.False(actualSingly.Exists(expectedDataToBeDeleted));
+
+            Assert.True(actualResult);
+            Assert.True(actualSingly.Head.Equals(actualSingly.Tail));
+            Assert.True(expectedSingly.Head.Equals(expectedSingly.Tail));
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedTail.Data == expectedSingly.Tail.Data);
+            Assert.True(expectedSingly.Length == actualSingly.Length);
+            Assert.True(1 == actualSingly.Length);
+        }
+
+        [Fact]
+        public void Delete_DeletesTheHeadOrTailAndRendersTheListEmpty_WhenOnlyOneNodeExists()
+        {
+            var actualData = 100;
+            var actualSingly = new Singly(actualData);
+
+            var actualIsDeleted = actualSingly.Delete(actualData);
+
+            Assert.Null(actualSingly.Head);
+            Assert.Null(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+
+            Assert.True(actualIsDeleted);
+            Assert.True(actualSingly.IsEmpty);
+            Assert.True(0 == actualSingly.Length);
+        }
+
+        [Theory]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,4,-5,6,7,8,9", 100)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,4,-5,6,7,8,9", -200)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,4,-5,6,7,8,9", 44)]
+        public void Delete_DoesNotDeletes_WhenSpecifiedDataDoesNotExists(
+            string actualStr
+            , string expectedStr
+            , long dataToBeDeleted)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedSingly = new Singly(ConvertAllToLong(expectedStr));
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+
+            var actualIsDeleted = actualSingly.Delete(dataToBeDeleted);
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+            Assert.NotNull(expectedSingly.Head);
+            Assert.NotNull(expectedSingly.Tail);
+
+            Assert.False(actualIsDeleted);
+            Assert.False(actualSingly.Head.Equals(actualSingly.Tail));
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(expectedSingly.Head.Equals(expectedSingly.Tail));
+            Assert.False(expectedSingly.IsNull);
+            Assert.False(expectedSingly.IsEmpty);
+
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedSingly.Length == actualSingly.Length);
+
+            var actualCurrent = actualSingly.Head;
+            var expectedCurrent = expectedSingly.Head;
+            while(expectedCurrent != null && actualCurrent != null)
+            {
+                Assert.True(expectedCurrent.Data == actualCurrent.Data);
+                expectedCurrent = expectedCurrent.Next;
+                actualCurrent = actualCurrent.Next;
+            }
         }
     }
 }
