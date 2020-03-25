@@ -148,6 +148,42 @@ namespace Ds.LinkedList
         }
 
         /// <summary>
+        /// Removes first occurrence of the node with specified data from the list.
+        /// Decreases the value of Length by 1.
+        /// </summary>
+        /// <param name="data">The data to be deleted.</param>
+        public bool Delete(long data)
+        {
+            if (IsEmpty)
+                throw new Exception(ExceptionMessageWhenEmpty);
+            if (IsHead(data))
+            {
+                Head = Head.Next;
+                --Length;
+                return true;
+            }
+
+            var current = Head.Next;
+            var previous = Head;
+            while(current != null)
+            {
+                if (current.Data == data)
+                {
+                    previous.Next = current.Next;
+                    if (previous.Next == null)
+                        Tail = previous;
+                    current.Next = null;
+                    --Length;
+                    return true;
+                }
+                previous = current;
+                current = current.Next;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Checks if the node is head or not.
         /// Compares only data.
         /// </summary>

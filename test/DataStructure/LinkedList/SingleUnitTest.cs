@@ -10,6 +10,10 @@ namespace Ds.Test.LinkedList
         private const string ExpectedMessageWhenEmpty = "The singly linked list is empty.";
         #endregion
 
+        #region Private Common Methods
+        private long[] ConvertAllToLong(string commaSeparatedStr) => Array.ConvertAll(commaSeparatedStr.Split(','), long.Parse);
+        #endregion
+
         [Theory]
         [InlineData(1)]
         [InlineData(-111)]
@@ -179,7 +183,7 @@ namespace Ds.Test.LinkedList
             , long expectedExistingData
             , long expectedNewData)
         {
-            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var singly = new Singly(ConvertAllToLong(fakeStr));
             var expectedLength = singly.Length + 1UL;
 
             singly.AddAfter(expectedExistingData, expectedNewData);
@@ -203,7 +207,7 @@ namespace Ds.Test.LinkedList
             , long expectedExistingData
             , long expectedNewData)
         {
-            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var singly = new Singly(ConvertAllToLong(fakeStr));
             var expectedLength = singly.Length + 1UL;
 
             singly.AddAfter(expectedExistingData, expectedNewData);
@@ -242,7 +246,7 @@ namespace Ds.Test.LinkedList
             , long expectedExistingData
             , long expectedNewData)
         {
-            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var singly = new Singly(ConvertAllToLong(fakeStr));
             var expectedLength = singly.Length + 1;
 
             singly.AddAfter(expectedExistingData, expectedNewData);
@@ -293,7 +297,7 @@ namespace Ds.Test.LinkedList
             , long expectedTailData
             , long expectedNewData)
         {
-            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var singly = new Singly(ConvertAllToLong(fakeStr));
             var expectedLength = singly.Length + 1;
 
             singly.AddAfterHead(expectedNewData);
@@ -325,7 +329,7 @@ namespace Ds.Test.LinkedList
             , long testData
             , bool expectedResult)
         {
-            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var singly = new Singly(ConvertAllToLong(fakeStr));
             var expectedLength = singly.Length;
             var expectedHeadData = singly.Head.Data;
 
@@ -361,7 +365,7 @@ namespace Ds.Test.LinkedList
             , long testData
             , bool expectedResult)
         {
-            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var singly = new Singly(ConvertAllToLong(fakeStr));
             var expectedLength = singly.Length;
             var expectedTailData = singly.Tail.Data;
 
@@ -397,7 +401,7 @@ namespace Ds.Test.LinkedList
             , long testData
             , bool expectedResult)
         {
-            var singly = new Singly(Array.ConvertAll(fakeStr.Split(','), long.Parse));
+            var singly = new Singly(ConvertAllToLong(fakeStr));
             var expectedLength = singly.Length;
             var expectedHead = singly.Head;
             var expectedTail = singly.Tail;
@@ -420,6 +424,87 @@ namespace Ds.Test.LinkedList
                 Assert.True(actualResult);
             else
                 Assert.False(actualResult);
+        }
+
+        [Theory]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,4,-5,6,7,9", 8)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,4,-5,6,8,9", 7)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,4,-5,7,8,9", 6)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,4,6,7,8,9", -5)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,-5,6,7,8,9", 4)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,4,-5,6,7,8,9", -3)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,-3,4,-5,6,7,8,9", 2)]
+        public void Delete_DeletesTheSpecifiedDataNodeWhichIsNeitherHeadNorTailAndAtleastTwoNodesLeftAfterDeletion_WhenDataIsUnique(
+            string actualStr
+            , string expectedStr
+            , long expectedDataToBeDeleted)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedSingly = new Singly(ConvertAllToLong(expectedStr));
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedLength = expectedSingly.Length;
+
+            var actualIsDeleted = actualSingly.Delete(expectedDataToBeDeleted);
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(expectedSingly.Head);
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(expectedSingly.Tail);
+            Assert.False(actualSingly.Head.Equals(actualSingly.Tail));
+            Assert.False(expectedSingly.Head.Equals(expectedSingly.Tail));
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(expectedSingly.IsNull);
+            Assert.False(expectedSingly.IsEmpty);
+            Assert.False(actualSingly.Exists(expectedDataToBeDeleted));
+            Assert.True(actualIsDeleted);
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedTail.Data == expectedSingly.Tail.Data);
+            Assert.True(expectedLength == actualSingly.Length);
+            Assert.True(2 <= actualSingly.Length);
+        }
+
+        [Theory]
+        [InlineData("1011,5,5,2,5,3,5,9", "1011,5,2,5,3,5,9", 5)]
+        public void Delete_DeletesTheSpecifiedDataNodeWhichIsNeitherHeadNorTailAndAtleastTwoNodesLeftAfterDeletion_WhenDataIsNotUnique(
+            string actualStr
+            , string expectedStr
+            , long expectedDataToBeDeleted)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedSingly = new Singly(ConvertAllToLong(expectedStr));
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedLength = expectedSingly.Length;
+            var expectedNodeToBeDeleted = actualSingly.Head.Next;
+
+            var actualIsDeleted = actualSingly.Delete(5);
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(expectedSingly.Head);
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(expectedSingly.Tail);
+
+            Assert.False(actualSingly.Head.Equals(actualSingly.Tail));
+            Assert.False(expectedSingly.Head.Equals(expectedSingly.Tail));
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(expectedSingly.IsNull);
+            Assert.False(expectedSingly.IsEmpty);
+
+            Assert.True(!expectedNodeToBeDeleted.Equals(actualSingly.Head.Next) && expectedNodeToBeDeleted.Data == actualSingly.Head.Next.Data);
+
+            Assert.True(actualIsDeleted);
+            Assert.True(actualSingly.Exists(expectedDataToBeDeleted));
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedTail.Data == expectedSingly.Tail.Data);
+            Assert.True(expectedLength == actualSingly.Length);
+            Assert.True(2 <= actualSingly.Length);
         }
     }
 }
