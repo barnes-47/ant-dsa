@@ -736,5 +736,152 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedTail.Data == actualSingly.Tail.Data);
             Assert.True(expectedLength == actualSingly.Length);
         }
+
+        [Theory]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", 0)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", 1)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", 900)]
+        public void Find_ReturnsNull_WhenTheListDoesNotContainsTheSpecifiedData(
+            string actualStr
+            , long expectedNodeDataNotInTheList)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedLength = actualSingly.Length;
+
+            var actualNode = actualSingly.Find(expectedNodeDataNotInTheList);
+
+            Assert.Null(actualNode);
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(actualSingly.Contains(expectedNodeDataNotInTheList));
+
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedLength == actualSingly.Length);
+        }
+
+        [Fact]
+        public void Find_ReturnsTheNode_WhenTheListContainsTheSpecifiedDataAtHead()
+        {
+            var actualSingly = new Singly(ConvertAllToLong("1011,2,-4,9"));
+            var expectedNodeDataInTheList = 1011L;
+            var expectedNode = actualSingly.Head;
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedLength = actualSingly.Length;
+
+            var actualNode = actualSingly.Find(expectedNodeDataInTheList);
+
+            Assert.NotNull(actualNode);
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+
+            Assert.True(actualSingly.Contains(expectedNodeDataInTheList));
+            Assert.True(expectedNode.Equals(actualNode));
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedNode.Data == actualNode.Data);
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedLength == actualSingly.Length);
+        }
+
+        [Fact]
+        public void Find_ReturnsTheNode_WhenTheListContainsTheSpecifiedDataAtTail()
+        {
+            var actualSingly = new Singly(ConvertAllToLong("1011,2,-4,9"));
+            var expectedNodeDataInTheList = 9L;
+            var expectedNode = actualSingly.Tail;
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedLength = actualSingly.Length;
+
+            var actualNode = actualSingly.Find(expectedNodeDataInTheList);
+
+            Assert.NotNull(actualNode);
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+
+            Assert.True(actualSingly.Contains(expectedNodeDataInTheList));
+            Assert.True(expectedNode.Equals(actualNode));
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedNode.Data == actualNode.Data);
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedLength == actualSingly.Length);
+        }
+
+        [Fact]
+        public void Find_ReturnsTheNode_WhenTheListContainsTheSpecifiedDataAtSecondPosition()
+        {
+            var actualSingly = new Singly(ConvertAllToLong("1011,2,-4,9"));
+            var expectedNodeDataInTheList = 2L;
+            var expectedNode = actualSingly.Head.Next;
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedLength = actualSingly.Length;
+
+            var actualNode = actualSingly.Find(expectedNodeDataInTheList);
+
+            Assert.NotNull(actualNode);
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+
+            Assert.True(actualSingly.Contains(expectedNodeDataInTheList));
+            Assert.True(expectedNode.Equals(actualNode));
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedNode.Data == actualNode.Data);
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedLength == actualSingly.Length);
+        }
+
+        [Fact]
+        public void Find_ReturnsTheNode_WhenTheListContainsTheSpecifiedDataAtThirdPosition()
+        {
+            var actualSingly = new Singly(ConvertAllToLong("1011,2,-4,9"));
+            var expectedNodeDataInTheList = -4L;
+            var expectedNode = actualSingly.Head.Next.Next;
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedLength = actualSingly.Length;
+
+            var actualNode = actualSingly.Find(expectedNodeDataInTheList);
+
+            Assert.NotNull(actualNode);
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+
+            Assert.True(actualSingly.Contains(expectedNodeDataInTheList));
+            Assert.True(expectedNode.Equals(actualNode));
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedNode.Data == actualNode.Data);
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedLength == actualSingly.Length);
+        }
     }
 }

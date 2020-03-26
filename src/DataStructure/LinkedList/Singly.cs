@@ -103,6 +103,24 @@ namespace Ds.LinkedList
         }
 
         /// <summary>
+        /// Gets the node for the specified data, if it exists in the list, null otherwise.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public Node Find(long data)
+        {
+            var current = Head;
+            while(current != null)
+            {
+                if (current.Data == data)
+                    return current;
+                current = current.Next;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Removes first occurrence of the node with specified data from the list.
         /// Decreases the value of Length by 1.
         /// </summary>
