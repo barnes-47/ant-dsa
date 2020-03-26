@@ -24,6 +24,13 @@ namespace Ds.Test.LinkedList
 
             return null;
         }
+        private void MakeItCircular(Singly singly, long data)
+        {
+            var node = GetNode(singly, data);
+            if (node == null)
+                return;
+            singly.Tail.Next = node;
+        }
         #endregion
 
         [Theory]
@@ -408,7 +415,7 @@ namespace Ds.Test.LinkedList
         [InlineData("1011,2,-3,4,6", -13453, false)]
         [InlineData("1011,2,-3,4,6", -1, false)]
         [InlineData("1011,2,-3,4,6", 0, false)]
-        public void Exists_ReturnsFalse_WhenDataDoesNotExistsInTheList_AndTrue_WhenDataExistsInTheList(
+        public void Contains_ReturnsFalse_WhenDataDoesNotExistsInTheList_AndTrue_WhenDataExistsInTheList(
             string fakeStr
             , long testData
             , bool expectedResult)
@@ -418,7 +425,7 @@ namespace Ds.Test.LinkedList
             var expectedHead = singly.Head;
             var expectedTail = singly.Tail;
 
-            var actualResult = singly.Exists(testData);
+            var actualResult = singly.Contains(testData);
 
             Assert.NotNull(singly.Head);
             Assert.NotNull(singly.Tail);
@@ -469,7 +476,7 @@ namespace Ds.Test.LinkedList
             Assert.False(actualSingly.IsEmpty);
             Assert.False(expectedSingly.IsNull);
             Assert.False(expectedSingly.IsEmpty);
-            Assert.False(actualSingly.Exists(expectedDataToBeDeleted));
+            Assert.False(actualSingly.Contains(expectedDataToBeDeleted));
             Assert.True(actualIsDeleted);
             Assert.True(expectedHead.Equals(actualSingly.Head));
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
@@ -510,7 +517,7 @@ namespace Ds.Test.LinkedList
             Assert.True(!expectedNodeToBeDeleted.Equals(actualSingly.Head.Next) && expectedNodeToBeDeleted.Data == actualSingly.Head.Next.Data);
 
             Assert.True(actualIsDeleted);
-            Assert.True(actualSingly.Exists(expectedDataToBeDeleted));
+            Assert.True(actualSingly.Contains(expectedDataToBeDeleted));
             Assert.True(expectedHead.Equals(actualSingly.Head));
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
             Assert.True(expectedTail.Equals(actualSingly.Tail));
@@ -549,7 +556,7 @@ namespace Ds.Test.LinkedList
             Assert.False(actualSingly.IsEmpty);
             Assert.False(expectedSingly.IsNull);
             Assert.False(expectedSingly.IsEmpty);
-            Assert.False(actualSingly.Exists(expectedDataToBeDeleted));
+            Assert.False(actualSingly.Contains(expectedDataToBeDeleted));
 
             Assert.True(actualResult);            
             Assert.True(expectedHead.Equals(actualSingly.Head));
@@ -586,7 +593,7 @@ namespace Ds.Test.LinkedList
             Assert.False(actualSingly.IsEmpty);
             Assert.False(expectedSingly.IsNull);
             Assert.False(expectedSingly.IsEmpty);
-            Assert.False(actualSingly.Exists(expectedDataToBeDeleted));
+            Assert.False(actualSingly.Contains(expectedDataToBeDeleted));
 
             Assert.True(actualResult);
             Assert.True(actualSingly.Head.Equals(actualSingly.Tail));
@@ -658,6 +665,76 @@ namespace Ds.Test.LinkedList
                 expectedCurrent = expectedCurrent.Next;
                 actualCurrent = actualCurrent.Next;
             }
+        }
+
+        [Theory]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", 9)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", 8)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", 7)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", 6)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", -5)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", 4)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", -3)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", 2)]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", 1011)]
+        public void HasLoop_ReturnsTrue_WhenTheTailPointsToAnotherNodeInTheList(
+            string actualStr
+            , long nodeDataToWhichTailPointsTo)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedTailPointsToNode = GetNode(actualSingly, nodeDataToWhichTailPointsTo);
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedLength = actualSingly.Length;
+            MakeItCircular(actualSingly, nodeDataToWhichTailPointsTo);
+
+            var actualHasLoop = actualSingly.HasLoop;
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedTailPointsToNode.Equals(actualSingly.Tail.Next));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedTailPointsToNode.Data == actualSingly.Tail.Next.Data);
+            Assert.True(expectedLength == actualSingly.Length);
+            Assert.True(actualHasLoop);
+        }
+
+        [Theory]
+        [InlineData("1011,2,-3,4,-5,6,7,8,9", 0)]
+        public void HasLoop_ReturnsFalse_WhenTheTailPointsToNull(
+            string actualStr
+            , long nodeDataToWhichTailPointsTo)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedTailPointsToNode = GetNode(actualSingly, nodeDataToWhichTailPointsTo);
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedLength = actualSingly.Length;
+            MakeItCircular(actualSingly, nodeDataToWhichTailPointsTo);
+
+            var actualHasLoop = actualSingly.HasLoop;
+
+            Assert.Null(expectedTailPointsToNode);
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(actualHasLoop);
+
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedLength == actualSingly.Length);
         }
     }
 }
