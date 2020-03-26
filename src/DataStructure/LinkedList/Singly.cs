@@ -28,6 +28,7 @@ namespace Ds.LinkedList
         public ulong Length { get; private set; }
         public bool IsNull => this == null;
         public bool IsEmpty => Length == 0 && Head == null && Tail == null;
+        public bool HasLoop => InternalHasLoop();
         #endregion
 
         #region Public Constructors
@@ -50,17 +51,19 @@ namespace Ds.LinkedList
         }
         #endregion
 
-        #region Public Methods
+        #region Basic Public Methods
         /// <summary>
-        /// Adds a newly created node with data passed, at the end of the list.
+        /// Adds a newly created node with specified data, at the end of the list.
         /// Tail now points to this newly added node.
+        /// Increases the value of Length by 1 after successful insertion of node.
         /// </summary>
         /// <param name="data"></param>
         public void Add(long data) => AddLast(data);
 
         /// <summary>
-        /// Adds a newly created node with data passed, at the start of the list.
+        /// Adds a newly created node with specified data, at the start of the list.
         /// Head now points to this newly added node.
+        /// Increases the value of Length by 1 after successful insertion of node.
         /// </summary>
         /// <param name="data"></param>
         public void AddFirst(long data)
@@ -77,10 +80,11 @@ namespace Ds.LinkedList
             Head = newNode;
             ++Length;
         }
-        
+
         /// <summary>
-        /// Adds a newly created node with data passed, at the end of the list.
+        /// Adds a newly created node with specified data, at the end of the list.
         /// Tail now points to this newly added node.
+        /// Increases the value of Length by 1 after successful insertion of node.
         /// </summary>
         /// <param name="data"></param>
         public void AddLast(long data)
@@ -99,7 +103,49 @@ namespace Ds.LinkedList
         }
 
         /// <summary>
-        /// Adds a new node containing newData after an existing node containing existingData.
+        /// Removes first occurrence of the node with specified data from the list.
+        /// Decreases the value of Length by 1.
+        /// </summary>
+        /// <param name="data">The data to be deleted.</param>
+        public bool Remove(long data)
+        {
+            if (IsEmpty)
+                throw new Exception(ExceptionMessageWhenEmpty);
+            if (IsHead(data))
+            {
+                Head = Head.Next;
+                if (--Length == 0)
+                    Tail = null;
+
+                return true;
+            }
+
+            var current = Head.Next;
+            var previous = Head;
+            while (current != null)
+            {
+                if (current.Data == data)
+                {
+                    previous.Next = current.Next;
+                    if (previous.Next == null)
+                        Tail = previous;
+                    current.Next = null;
+                    --Length;
+
+                    return true;
+                }
+                previous = current;
+                current = current.Next;
+            }
+
+            return false;
+        }
+        #endregion
+
+        #region Custom Public Methods
+        /// <summary>
+        /// Adds a new node containing newData after a node containing existingData.
+        /// Increases the value of Length by 1 after successful insertion of node.
         /// </summary>
         /// <param name="existingData"></param>
         /// <param name="newData"></param>
@@ -136,7 +182,7 @@ namespace Ds.LinkedList
         }
 
         /// <summary>
-        /// Adds newly created node with data, after the head of the list.
+        /// Adds newly created node with the specified data, after the head of the list.
         /// Increases the value of Length by 1 after successful insertion of node.
         /// </summary>
         /// <param name="data"></param>
@@ -150,45 +196,6 @@ namespace Ds.LinkedList
             };
             Head.Next = newNode;
             ++Length;
-        }
-
-        /// <summary>
-        /// Removes first occurrence of the node with specified data from the list.
-        /// Decreases the value of Length by 1.
-        /// </summary>
-        /// <param name="data">The data to be deleted.</param>
-        public bool Delete(long data)
-        {
-            if (IsEmpty)
-                throw new Exception(ExceptionMessageWhenEmpty);
-            if (IsHead(data))
-            {
-                Head = Head.Next;
-                if (--Length == 0)
-                    Tail = null;
-
-                return true;
-            }
-
-            var current = Head.Next;
-            var previous = Head;
-            while(current != null)
-            {
-                if (current.Data == data)
-                {
-                    previous.Next = current.Next;
-                    if (previous.Next == null)
-                        Tail = previous;
-                    current.Next = null;
-                    --Length;
-
-                    return true;
-                }
-                previous = current;
-                current = current.Next;
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -212,7 +219,7 @@ namespace Ds.LinkedList
         /// </summary>
         /// <param name="data"></param>
         /// <returns>true if data exists in the list, false otherwise.</returns>
-        public bool Exists(long data)
+        public bool Contains(long data)
         {
             if (IsEmpty)
                 return false;
@@ -226,6 +233,27 @@ namespace Ds.LinkedList
             {
                 if (current.Data == data)
                     return true;
+                current = current.Next;
+            }
+
+            return false;
+        }
+        #endregion
+
+        #region Geeks-For-Geeks Public Methods
+
+        #endregion
+
+        #region Private Methods
+        private bool InternalHasLoop()
+        {
+            var hashSet = new HashSet<Node>();
+            var current = Head;
+            while(current != null)
+            {
+                if (hashSet.Contains(current))
+                    return true;
+                hashSet.Add(current);
                 current = current.Next;
             }
 
