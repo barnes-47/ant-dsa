@@ -51,7 +51,7 @@ namespace Ds.LinkedList
         }
         #endregion
 
-        #region Public Methods
+        #region Basic Public Methods
         /// <summary>
         /// Adds a newly created node with specified data, at the end of the list.
         /// Tail now points to this newly added node.
@@ -102,6 +102,47 @@ namespace Ds.LinkedList
             ++Length;
         }
 
+        /// <summary>
+        /// Removes first occurrence of the node with specified data from the list.
+        /// Decreases the value of Length by 1.
+        /// </summary>
+        /// <param name="data">The data to be deleted.</param>
+        public bool Remove(long data)
+        {
+            if (IsEmpty)
+                throw new Exception(ExceptionMessageWhenEmpty);
+            if (IsHead(data))
+            {
+                Head = Head.Next;
+                if (--Length == 0)
+                    Tail = null;
+
+                return true;
+            }
+
+            var current = Head.Next;
+            var previous = Head;
+            while (current != null)
+            {
+                if (current.Data == data)
+                {
+                    previous.Next = current.Next;
+                    if (previous.Next == null)
+                        Tail = previous;
+                    current.Next = null;
+                    --Length;
+
+                    return true;
+                }
+                previous = current;
+                current = current.Next;
+            }
+
+            return false;
+        }
+        #endregion
+
+        #region Custom Public Methods
         /// <summary>
         /// Adds a new node containing newData after a node containing existingData.
         /// Increases the value of Length by 1 after successful insertion of node.
@@ -158,45 +199,6 @@ namespace Ds.LinkedList
         }
 
         /// <summary>
-        /// Removes first occurrence of the node with specified data from the list.
-        /// Decreases the value of Length by 1.
-        /// </summary>
-        /// <param name="data">The data to be deleted.</param>
-        public bool Delete(long data)
-        {
-            if (IsEmpty)
-                throw new Exception(ExceptionMessageWhenEmpty);
-            if (IsHead(data))
-            {
-                Head = Head.Next;
-                if (--Length == 0)
-                    Tail = null;
-
-                return true;
-            }
-
-            var current = Head.Next;
-            var previous = Head;
-            while(current != null)
-            {
-                if (current.Data == data)
-                {
-                    previous.Next = current.Next;
-                    if (previous.Next == null)
-                        Tail = previous;
-                    current.Next = null;
-                    --Length;
-
-                    return true;
-                }
-                previous = current;
-                current = current.Next;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Checks if the node is head or not.
         /// Compares only data.
         /// </summary>
@@ -236,6 +238,10 @@ namespace Ds.LinkedList
 
             return false;
         }
+        #endregion
+
+        #region Geeks-For-Geeks Public Methods
+
         #endregion
 
         #region Private Methods

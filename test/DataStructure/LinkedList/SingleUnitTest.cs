@@ -453,7 +453,7 @@ namespace Ds.Test.LinkedList
         [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,-5,6,7,8,9", 4)]
         [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,4,-5,6,7,8,9", -3)]
         [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,-3,4,-5,6,7,8,9", 2)]
-        public void Delete_DeletesTheSpecifiedDataNodeWhichIsNeitherHeadNorTailAndAtleastTwoNodesLeftAfterDeletion_WhenDataIsUnique(
+        public void Remove_RemovesTheSpecifiedDataNodeWhichIsNeitherHeadNorTailAndAtleastTwoNodesLeftAfterDeletion_WhenDataIsUnique(
             string actualStr
             , string expectedStr
             , long expectedDataToBeDeleted)
@@ -464,7 +464,7 @@ namespace Ds.Test.LinkedList
             var expectedTail = actualSingly.Tail;
             var expectedLength = expectedSingly.Length;
 
-            var actualIsDeleted = actualSingly.Delete(expectedDataToBeDeleted);
+            var actualIsDeleted = actualSingly.Remove(expectedDataToBeDeleted);
 
             Assert.NotNull(actualSingly.Head);
             Assert.NotNull(expectedSingly.Head);
@@ -488,7 +488,7 @@ namespace Ds.Test.LinkedList
 
         [Theory]
         [InlineData("1011,5,5,2,5,3,5,9", "1011,5,2,5,3,5,9", 5)]
-        public void Delete_DeletesTheSpecifiedDataNodeWhichIsNeitherHeadNorTailAndAtleastTwoNodesLeftAfterDeletion_WhenDataIsNotUnique(
+        public void Remove_RemovesTheSpecifiedDataNodeWhichIsNeitherHeadNorTailAndAtleastTwoNodesLeftAfterDeletion_WhenDataIsNotUnique(
             string actualStr
             , string expectedStr
             , long expectedDataToBeDeleted)
@@ -500,7 +500,7 @@ namespace Ds.Test.LinkedList
             var expectedLength = expectedSingly.Length;
             var expectedNodeToBeDeleted = actualSingly.Head.Next;
 
-            var actualIsDeleted = actualSingly.Delete(5);
+            var actualIsDeleted = actualSingly.Remove(5);
 
             Assert.NotNull(actualSingly.Head);
             Assert.NotNull(expectedSingly.Head);
@@ -531,7 +531,7 @@ namespace Ds.Test.LinkedList
         [InlineData("1011,-3,9", "-3,9", 1011, -3, 9)]
         [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,4,-5,6,7,8", 9, 1011, 8)]
         [InlineData("1011,-3,9", "1011,-3", 9, 1011, -3)]
-        public void Delete_DeletesTheHeadOrTailWithAtleastTwoNodeLeftAfterDeletion_WhenTheSpecifiedDataIsInHeadOrTail(
+        public void Remove_RemovesTheHeadOrTailWithAtleastTwoNodeLeftAfterDeletion_WhenTheSpecifiedDataIsInHeadOrTail(
             string actualStr
             , string expectedStr
             , long expectedDataToBeDeleted
@@ -543,7 +543,7 @@ namespace Ds.Test.LinkedList
             var expectedHead = GetNode(actualSingly, expectedHeadData);
             var expectedTail = GetNode(actualSingly, expectedTailData);
 
-            var actualResult = actualSingly.Delete(expectedDataToBeDeleted);
+            var actualResult = actualSingly.Remove(expectedDataToBeDeleted);
 
             Assert.NotNull(actualSingly.Head);
             Assert.NotNull(expectedSingly.Head);
@@ -570,7 +570,7 @@ namespace Ds.Test.LinkedList
         [Theory]
         [InlineData("1,2", "1", 2, 1, 1)]
         [InlineData("1,2", "2", 1, 2, 2)]
-        public void Delete_DeletesTheHeadOrTailWithOnlyOneNodeLeftAfterDeletion_WhenSpecifiedDataIsInHeadOrTailAndLengthIsTwo(
+        public void Remove_RemovesTheHeadOrTailWithOnlyOneNodeLeftAfterDeletion_WhenSpecifiedDataIsInHeadOrTailAndLengthIsTwo(
             string actualStr
             , string expectedStr
             , long expectedDataToBeDeleted
@@ -582,7 +582,7 @@ namespace Ds.Test.LinkedList
             var expectedHead = GetNode(actualSingly, expectedHeadData);
             var expectedTail = GetNode(actualSingly, expectedTailData);
 
-            var actualResult = actualSingly.Delete(expectedDataToBeDeleted);
+            var actualResult = actualSingly.Remove(expectedDataToBeDeleted);
 
             Assert.NotNull(actualSingly.Head);
             Assert.NotNull(expectedSingly.Head);
@@ -607,12 +607,12 @@ namespace Ds.Test.LinkedList
         }
 
         [Fact]
-        public void Delete_DeletesTheHeadOrTailAndRendersTheListEmpty_WhenOnlyOneNodeExists()
+        public void Remove_RemovesTheHeadOrTailAndRendersTheListEmpty_WhenOnlyOneNodeExists()
         {
             var actualData = 100;
             var actualSingly = new Singly(actualData);
 
-            var actualIsDeleted = actualSingly.Delete(actualData);
+            var actualIsDeleted = actualSingly.Remove(actualData);
 
             Assert.Null(actualSingly.Head);
             Assert.Null(actualSingly.Tail);
@@ -628,7 +628,7 @@ namespace Ds.Test.LinkedList
         [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,4,-5,6,7,8,9", 100)]
         [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,4,-5,6,7,8,9", -200)]
         [InlineData("1011,2,-3,4,-5,6,7,8,9", "1011,2,-3,4,-5,6,7,8,9", 44)]
-        public void Delete_DoesNotDeletes_WhenSpecifiedDataDoesNotExists(
+        public void Remove_DoesNotRemoves_WhenSpecifiedDataDoesNotExists(
             string actualStr
             , string expectedStr
             , long dataToBeDeleted)
@@ -638,7 +638,7 @@ namespace Ds.Test.LinkedList
             var expectedHead = actualSingly.Head;
             var expectedTail = actualSingly.Tail;
 
-            var actualIsDeleted = actualSingly.Delete(dataToBeDeleted);
+            var actualIsDeleted = actualSingly.Remove(dataToBeDeleted);
 
             Assert.NotNull(actualSingly.Head);
             Assert.NotNull(actualSingly.Tail);
