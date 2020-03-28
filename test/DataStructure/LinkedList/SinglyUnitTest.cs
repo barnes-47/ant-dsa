@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Ds.Test.LinkedList
 {
-    public class SingleUnitTest
+    public class SinglyUnitTest
     {
         #region Private Constants
         private const string ExpectedMessageWhenEmpty = "The singly linked list is empty.";
@@ -70,7 +70,7 @@ namespace Ds.Test.LinkedList
             Assert.True(singly.Head.Equals(singly.Tail));
             Assert.True(singly.Head.Data == testData);
             Assert.True(singly.Tail.Data == testData);
-            Assert.True(singly.Length == length);
+            Assert.True(singly.Count == length);
         }
 
         [Theory]
@@ -94,7 +94,7 @@ namespace Ds.Test.LinkedList
             Assert.False(singly.Head.Equals(singly.Tail));
             Assert.False(singly.IsNull);
             Assert.False(singly.IsEmpty);
-            Assert.True(singly.Length == (ulong)mockData.Length);
+            Assert.True(singly.Count == (ulong)mockData.Length);
 
             Array.Reverse(mockData);
             var current = singly.Head;
@@ -142,7 +142,7 @@ namespace Ds.Test.LinkedList
             Assert.True(singly.Head.Equals(singly.Tail));
             Assert.True(singly.Head.Data == testData);
             Assert.True(singly.Tail.Data == testData);
-            Assert.True(singly.Length == length);
+            Assert.True(singly.Count == length);
         }
 
         [Theory]
@@ -166,7 +166,7 @@ namespace Ds.Test.LinkedList
             Assert.False(singly.Head.Equals(singly.Tail));
             Assert.False(singly.IsNull);
             Assert.False(singly.IsEmpty);
-            Assert.True(singly.Length == (ulong)mockData.Length);
+            Assert.True(singly.Count == (ulong)mockData.Length);
 
             var current = singly.Head;
             foreach (var d in mockData)
@@ -203,7 +203,7 @@ namespace Ds.Test.LinkedList
             , long expectedNewData)
         {
             var singly = new Singly(ConvertAllToLong(fakeStr));
-            var expectedLength = singly.Length + 1UL;
+            var expectedLength = singly.Count + 1UL;
 
             singly.AddAfter(expectedExistingData, expectedNewData);
 
@@ -212,7 +212,7 @@ namespace Ds.Test.LinkedList
             Assert.False(singly.Head.Equals(singly.Tail));
             Assert.False(singly.IsNull);
             Assert.False(singly.IsEmpty);
-            Assert.True(expectedLength == singly.Length);
+            Assert.True(expectedLength == singly.Count);
             Assert.True(expectedExistingData == singly.Head.Data);
             Assert.True(expectedNewData == singly.Head.Next.Data);
         }
@@ -227,7 +227,7 @@ namespace Ds.Test.LinkedList
             , long expectedNewData)
         {
             var singly = new Singly(ConvertAllToLong(fakeStr));
-            var expectedLength = singly.Length + 1UL;
+            var expectedLength = singly.Count + 1UL;
 
             singly.AddAfter(expectedExistingData, expectedNewData);
 
@@ -236,7 +236,7 @@ namespace Ds.Test.LinkedList
             Assert.False(singly.Head.Equals(singly.Tail));
             Assert.False(singly.IsNull);
             Assert.False(singly.IsEmpty);
-            Assert.True(expectedLength == singly.Length);
+            Assert.True(expectedLength == singly.Count);
             Assert.True(expectedNewData == singly.Tail.Data);
 
             var current = singly.Head.Next;
@@ -266,7 +266,7 @@ namespace Ds.Test.LinkedList
             , long expectedNewData)
         {
             var singly = new Singly(ConvertAllToLong(fakeStr));
-            var expectedLength = singly.Length + 1;
+            var expectedLength = singly.Count + 1;
 
             singly.AddAfter(expectedExistingData, expectedNewData);
 
@@ -275,7 +275,7 @@ namespace Ds.Test.LinkedList
             Assert.False(singly.Head.Equals(singly.Tail));
             Assert.False(singly.IsNull);
             Assert.False(singly.IsEmpty);
-            Assert.True(expectedLength == singly.Length);
+            Assert.True(expectedLength == singly.Count);
 
             var current = singly.Head;
             while (current != null)
@@ -317,7 +317,7 @@ namespace Ds.Test.LinkedList
             , long expectedNewData)
         {
             var singly = new Singly(ConvertAllToLong(fakeStr));
-            var expectedLength = singly.Length + 1;
+            var expectedLength = singly.Count + 1;
 
             singly.AddAfterHead(expectedNewData);
 
@@ -326,7 +326,7 @@ namespace Ds.Test.LinkedList
             Assert.False(singly.Head.Equals(singly.Tail));
             Assert.False(singly.IsNull);
             Assert.False(singly.IsEmpty);
-            Assert.True(expectedLength == singly.Length);
+            Assert.True(expectedLength == singly.Count);
             Assert.True(expectedHeadData == singly.Head.Data);
             Assert.True(expectedTailData == singly.Tail.Data);
             Assert.True(expectedNewData == singly.Head.Next.Data);
@@ -349,7 +349,7 @@ namespace Ds.Test.LinkedList
             , bool expectedResult)
         {
             var singly = new Singly(ConvertAllToLong(fakeStr));
-            var expectedLength = singly.Length;
+            var expectedLength = singly.Count;
             var expectedHeadData = singly.Head.Data;
 
             var actualResult = singly.IsHead(testData);
@@ -359,7 +359,7 @@ namespace Ds.Test.LinkedList
             Assert.False(singly.Head.Equals(singly.Tail));
             Assert.False(singly.IsNull);
             Assert.False(singly.IsEmpty);
-            Assert.True(expectedLength == singly.Length);
+            Assert.True(expectedLength == singly.Count);
             Assert.True(expectedResult == actualResult);
 
             if (expectedResult)
@@ -385,7 +385,7 @@ namespace Ds.Test.LinkedList
             , bool expectedResult)
         {
             var singly = new Singly(ConvertAllToLong(fakeStr));
-            var expectedLength = singly.Length;
+            var expectedLength = singly.Count;
             var expectedTailData = singly.Tail.Data;
 
             var actualResult = singly.IsTail(testData);
@@ -395,7 +395,7 @@ namespace Ds.Test.LinkedList
             Assert.False(singly.Head.Equals(singly.Tail));
             Assert.False(singly.IsNull);
             Assert.False(singly.IsEmpty);
-            Assert.True(expectedLength == singly.Length);
+            Assert.True(expectedLength == singly.Count);
             Assert.True(expectedResult == actualResult);
 
             if (expectedResult)
@@ -421,7 +421,7 @@ namespace Ds.Test.LinkedList
             , bool expectedResult)
         {
             var singly = new Singly(ConvertAllToLong(fakeStr));
-            var expectedLength = singly.Length;
+            var expectedLength = singly.Count;
             var expectedHead = singly.Head;
             var expectedTail = singly.Tail;
 
@@ -436,7 +436,7 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedHead.Data == singly.Head.Data);
             Assert.True(singly.Tail.Equals(expectedTail));
             Assert.True(expectedTail.Data == singly.Tail.Data);
-            Assert.True(expectedLength == singly.Length);
+            Assert.True(expectedLength == singly.Count);
             Assert.True(expectedResult == actualResult);
 
             if (expectedResult)
@@ -462,7 +462,7 @@ namespace Ds.Test.LinkedList
             var expectedSingly = new Singly(ConvertAllToLong(expectedStr));
             var expectedHead = actualSingly.Head;
             var expectedTail = actualSingly.Tail;
-            var expectedLength = expectedSingly.Length;
+            var expectedLength = expectedSingly.Count;
 
             var actualIsDeleted = actualSingly.Remove(expectedDataToBeDeleted);
 
@@ -482,8 +482,8 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
             Assert.True(expectedTail.Equals(actualSingly.Tail));
             Assert.True(expectedTail.Data == expectedSingly.Tail.Data);
-            Assert.True(expectedLength == actualSingly.Length);
-            Assert.True(2 <= actualSingly.Length);
+            Assert.True(expectedLength == actualSingly.Count);
+            Assert.True(2 <= actualSingly.Count);
         }
 
         [Theory]
@@ -497,7 +497,7 @@ namespace Ds.Test.LinkedList
             var expectedSingly = new Singly(ConvertAllToLong(expectedStr));
             var expectedHead = actualSingly.Head;
             var expectedTail = actualSingly.Tail;
-            var expectedLength = expectedSingly.Length;
+            var expectedLength = expectedSingly.Count;
             var expectedNodeToBeDeleted = actualSingly.Head.Next;
 
             var actualIsDeleted = actualSingly.Remove(5);
@@ -522,8 +522,8 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
             Assert.True(expectedTail.Equals(actualSingly.Tail));
             Assert.True(expectedTail.Data == expectedSingly.Tail.Data);
-            Assert.True(expectedLength == actualSingly.Length);
-            Assert.True(2 <= actualSingly.Length);
+            Assert.True(expectedLength == actualSingly.Count);
+            Assert.True(2 <= actualSingly.Count);
         }
 
         [Theory]
@@ -563,8 +563,8 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
             Assert.True(expectedTail.Equals(actualSingly.Tail));
             Assert.True(expectedTail.Data == expectedSingly.Tail.Data);
-            Assert.True(expectedSingly.Length == actualSingly.Length);
-            Assert.True(2 <= actualSingly.Length);
+            Assert.True(expectedSingly.Count == actualSingly.Count);
+            Assert.True(2 <= actualSingly.Count);
         }
 
         [Theory]
@@ -602,8 +602,8 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
             Assert.True(expectedTail.Equals(actualSingly.Tail));
             Assert.True(expectedTail.Data == expectedSingly.Tail.Data);
-            Assert.True(expectedSingly.Length == actualSingly.Length);
-            Assert.True(1 == actualSingly.Length);
+            Assert.True(expectedSingly.Count == actualSingly.Count);
+            Assert.True(1 == actualSingly.Count);
         }
 
         [Fact]
@@ -621,7 +621,7 @@ namespace Ds.Test.LinkedList
 
             Assert.True(actualIsDeleted);
             Assert.True(actualSingly.IsEmpty);
-            Assert.True(0 == actualSingly.Length);
+            Assert.True(0 == actualSingly.Count);
         }
 
         [Theory]
@@ -655,7 +655,7 @@ namespace Ds.Test.LinkedList
 
             Assert.True(expectedHead.Equals(actualSingly.Head));
             Assert.True(expectedTail.Equals(actualSingly.Tail));
-            Assert.True(expectedSingly.Length == actualSingly.Length);
+            Assert.True(expectedSingly.Count == actualSingly.Count);
 
             var actualCurrent = actualSingly.Head;
             var expectedCurrent = expectedSingly.Head;
@@ -685,7 +685,7 @@ namespace Ds.Test.LinkedList
             var expectedTailPointsToNode = GetNode(actualSingly, nodeDataToWhichTailPointsTo);
             var expectedHead = actualSingly.Head;
             var expectedTail = actualSingly.Tail;
-            var expectedLength = actualSingly.Length;
+            var expectedLength = actualSingly.Count;
             MakeItCircular(actualSingly, nodeDataToWhichTailPointsTo);
 
             var actualHasLoop = actualSingly.HasLoop;
@@ -702,7 +702,7 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
             Assert.True(expectedTail.Data == actualSingly.Tail.Data);
             Assert.True(expectedTailPointsToNode.Data == actualSingly.Tail.Next.Data);
-            Assert.True(expectedLength == actualSingly.Length);
+            Assert.True(expectedLength == actualSingly.Count);
             Assert.True(actualHasLoop);
         }
 
@@ -716,7 +716,7 @@ namespace Ds.Test.LinkedList
             var expectedTailPointsToNode = GetNode(actualSingly, nodeDataToWhichTailPointsTo);
             var expectedHead = actualSingly.Head;
             var expectedTail = actualSingly.Tail;
-            var expectedLength = actualSingly.Length;
+            var expectedLength = actualSingly.Count;
             MakeItCircular(actualSingly, nodeDataToWhichTailPointsTo);
 
             var actualHasLoop = actualSingly.HasLoop;
@@ -734,7 +734,7 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedTail.Equals(actualSingly.Tail));
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
             Assert.True(expectedTail.Data == actualSingly.Tail.Data);
-            Assert.True(expectedLength == actualSingly.Length);
+            Assert.True(expectedLength == actualSingly.Count);
         }
 
         [Theory]
@@ -748,7 +748,7 @@ namespace Ds.Test.LinkedList
             var actualSingly = new Singly(ConvertAllToLong(actualStr));
             var expectedHead = actualSingly.Head;
             var expectedTail = actualSingly.Tail;
-            var expectedLength = actualSingly.Length;
+            var expectedLength = actualSingly.Count;
 
             var actualNode = actualSingly.Find(expectedNodeDataNotInTheList);
 
@@ -765,7 +765,7 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedTail.Equals(actualSingly.Tail));
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
             Assert.True(expectedTail.Data == actualSingly.Tail.Data);
-            Assert.True(expectedLength == actualSingly.Length);
+            Assert.True(expectedLength == actualSingly.Count);
         }
 
         [Fact]
@@ -776,7 +776,7 @@ namespace Ds.Test.LinkedList
             var expectedNode = actualSingly.Head;
             var expectedHead = actualSingly.Head;
             var expectedTail = actualSingly.Tail;
-            var expectedLength = actualSingly.Length;
+            var expectedLength = actualSingly.Count;
 
             var actualNode = actualSingly.Find(expectedNodeDataInTheList);
 
@@ -794,7 +794,7 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedNode.Data == actualNode.Data);
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
             Assert.True(expectedTail.Data == actualSingly.Tail.Data);
-            Assert.True(expectedLength == actualSingly.Length);
+            Assert.True(expectedLength == actualSingly.Count);
         }
 
         [Fact]
@@ -805,7 +805,7 @@ namespace Ds.Test.LinkedList
             var expectedNode = actualSingly.Tail;
             var expectedHead = actualSingly.Head;
             var expectedTail = actualSingly.Tail;
-            var expectedLength = actualSingly.Length;
+            var expectedLength = actualSingly.Count;
 
             var actualNode = actualSingly.Find(expectedNodeDataInTheList);
 
@@ -823,7 +823,7 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedNode.Data == actualNode.Data);
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
             Assert.True(expectedTail.Data == actualSingly.Tail.Data);
-            Assert.True(expectedLength == actualSingly.Length);
+            Assert.True(expectedLength == actualSingly.Count);
         }
 
         [Fact]
@@ -834,7 +834,7 @@ namespace Ds.Test.LinkedList
             var expectedNode = actualSingly.Head.Next;
             var expectedHead = actualSingly.Head;
             var expectedTail = actualSingly.Tail;
-            var expectedLength = actualSingly.Length;
+            var expectedLength = actualSingly.Count;
 
             var actualNode = actualSingly.Find(expectedNodeDataInTheList);
 
@@ -852,7 +852,7 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedNode.Data == actualNode.Data);
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
             Assert.True(expectedTail.Data == actualSingly.Tail.Data);
-            Assert.True(expectedLength == actualSingly.Length);
+            Assert.True(expectedLength == actualSingly.Count);
         }
 
         [Fact]
@@ -863,7 +863,7 @@ namespace Ds.Test.LinkedList
             var expectedNode = actualSingly.Head.Next.Next;
             var expectedHead = actualSingly.Head;
             var expectedTail = actualSingly.Tail;
-            var expectedLength = actualSingly.Length;
+            var expectedLength = actualSingly.Count;
 
             var actualNode = actualSingly.Find(expectedNodeDataInTheList);
 
@@ -881,7 +881,7 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedNode.Data == actualNode.Data);
             Assert.True(expectedHead.Data == actualSingly.Head.Data);
             Assert.True(expectedTail.Data == actualSingly.Tail.Data);
-            Assert.True(expectedLength == actualSingly.Length);
+            Assert.True(expectedLength == actualSingly.Count);
         }
     }
 }

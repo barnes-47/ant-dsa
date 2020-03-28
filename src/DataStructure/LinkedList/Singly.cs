@@ -25,10 +25,14 @@ namespace Ds.LinkedList
         #region Public Getters
         public Node Head { get; private set; }
         public Node Tail { get; private set; }
-        public ulong Length { get; private set; }
+        public ulong Count { get; private set; }
         public bool IsNull => this == null;
-        public bool IsEmpty => Length == 0 && Head == null && Tail == null;
+        public bool IsEmpty => Count == 0 && Head == null && Tail == null;
         public bool HasLoop => InternalHasLoop();
+        #endregion
+
+        #region Private Properties
+        
         #endregion
 
         #region Public Constructors
@@ -72,13 +76,13 @@ namespace Ds.LinkedList
             if (IsEmpty)
             {
                 Head = Tail = newNode;
-                ++Length;
+                ++Count;
                 return;
             }
 
             newNode.Next = Head;
             Head = newNode;
-            ++Length;
+            ++Count;
         }
 
         /// <summary>
@@ -93,13 +97,13 @@ namespace Ds.LinkedList
             if (IsEmpty)
             {
                 Head = Tail = newNode;
-                ++Length;
+                ++Count;
                 return;
             }
 
             Tail.Next = newNode;
             Tail = newNode;
-            ++Length;
+            ++Count;
         }
 
         /// <summary>
@@ -132,7 +136,7 @@ namespace Ds.LinkedList
             if (IsHead(data))
             {
                 Head = Head.Next;
-                if (--Length == 0)
+                if (--Count == 0)
                     Tail = null;
 
                 return true;
@@ -148,7 +152,7 @@ namespace Ds.LinkedList
                     if (previous.Next == null)
                         Tail = previous;
                     current.Next = null;
-                    --Length;
+                    --Count;
 
                     return true;
                 }
@@ -192,7 +196,7 @@ namespace Ds.LinkedList
                         Next = current.Next
                     };
                     current.Next = newNode;
-                    ++Length;
+                    ++Count;
                     break;
                 }
                 current = current.Next;
@@ -213,7 +217,7 @@ namespace Ds.LinkedList
                 Next = Head.Next
             };
             Head.Next = newNode;
-            ++Length;
+            ++Count;
         }
 
         /// <summary>
@@ -259,7 +263,7 @@ namespace Ds.LinkedList
         #endregion
 
         #region Geeks-For-Geeks Public Methods
-
+        
         #endregion
 
         #region Private Methods
