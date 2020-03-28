@@ -263,7 +263,32 @@ namespace Ds.LinkedList
         #endregion
 
         #region Geeks-For-Geeks Public Methods
-        
+        /// <summary>
+        /// Returns an element at the specified index, 0 otherwise.
+        /// Follows a zero-based index.
+        /// </summary>
+        /// <param name="index">The index</param>
+        /// <returns></returns>
+        public long ElementAt(ulong index)
+        {
+            if (index >= Count)
+                return 0;
+            if (index == 0)
+                return Head.Data;
+            if (index == Count - 1)
+                return Tail.Data;
+
+            var current = Head.Next;
+            var internalIndex = 1UL;
+            while(current != null)
+            {
+                if (internalIndex++ == index)
+                    return current.Data;
+                current = current.Next;
+            }
+
+            return 0;
+        }
         #endregion
 
         #region Private Methods
