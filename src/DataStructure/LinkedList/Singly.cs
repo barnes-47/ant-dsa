@@ -326,6 +326,9 @@ namespace Ds.LinkedList
         /// <returns></returns>
         public ulong LoopSize()
         {
+            if (IsEmpty)
+                return 0;
+
             var tortoise = Head;
             var hare = Head.Next;
             while(tortoise != null && hare != null)
