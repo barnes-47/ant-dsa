@@ -28,7 +28,6 @@ namespace Ds.LinkedList
         public ulong Count { get; private set; }
         public bool IsNull => this == null;
         public bool IsEmpty => Count == 0 && Head == null && Tail == null;
-        public bool HasLoop => InternalHasLoop();
         #endregion
 
         #region Private Properties
@@ -289,22 +288,118 @@ namespace Ds.LinkedList
 
             return 0;
         }
-        #endregion
 
-        #region Private Methods
-        private bool InternalHasLoop()
+        /// <summary>
+        /// Returns true if a cycle is detected in the list, false otherwise.
+        /// Uses "The Tortoise and the Hare Algorithm".
+        /// </summary>
+        /// <returns></returns>
+        public bool LoopExists()
         {
-            var hashSet = new HashSet<Node>();
-            var current = Head;
-            while(current != null)
+            if (IsEmpty)
+                return false;
+            if (Tail.Next == null)  // No loop detected when Tail points to --> null.
+                return false;
+            if (Tail.Next.Equals(Head) && Tail.Next.Data == Head.Data)  // Loop detected when Tail points to --> Head.
+                return true;
+            if (Tail.Next.Equals(Tail) && Tail.Next.Data == Tail.Data)  // Loop detected when Tail points to --> Tail.
+                return true;
+
+            var tortoise = Head;
+            var hare = Head.Next;
+            while(hare != null)
             {
-                if (hashSet.Contains(current))
+                if (hare.Next == null)
+                    return false;
+                if (hare.Equals(tortoise) && hare.Data == tortoise.Data)
                     return true;
-                hashSet.Add(current);
-                current = current.Next;
+                hare = hare.Next.Next;
+                tortoise = tortoise.Next;
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Gets the number of elements forming the loop in the list.
+        /// </summary>
+        /// <returns></returns>
+        public ulong LoopSize()
+        {
+            var tortoise = Head;
+            var hare = Head.Next;
+            while(tortoise != null && hare != null)
+            {
+                if (hare.Next == null)
+                    return 0;
+                if (hare.Equals(tortoise) && hare.Data == tortoise.Data)
+                {
+                    var count = 1UL;
+                    var temp = tortoise;
+                    while(temp.Next != tortoise)
+                    {
+                        ++count;
+                        temp = temp.Next;
+                    }
+
+                    return count;
+                }
+                hare = hare.Next.Next;
+                tortoise = tortoise.Next;
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Gets the first node of the loop, null if no loop is detected.
+        /// Uses The Tortoise and Hare Algorithm.
+        /// </summary>
+        /// <returns></returns>
+        public Node LoopStart_UsingTortoiseHare()
+        {
+            var tortoise = Head;
+            var hare = Head.Next;
+            while(tortoise != null && hare != null)
+            {
+                if (hare.Next == null)
+                    return null;
+                if (hare.Equals(tortoise) && hare.Data == tortoise.Data)
+                {
+                    tortoise = Head;
+                    while(tortoise != hare)
+                    {
+                        tortoise = tortoise.Next;
+                        hare = hare.Next;
+                    }
+
+                    return tortoise;
+                }
+                hare = hare.Next.Next;
+                tortoise = tortoise.Next;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the first node of the loop, null if no loop is detected.
+        /// Using the HashSet to store the nodes and returning the one that already exists.
+        /// </summary>
+        /// <returns></returns>
+        public Node LoopStart_UsingHashSet()
+        {
+            var nodeHashSet = new HashSet<Node>();
+            var current = Head;
+            while(current != null)
+            {
+                if (nodeHashSet.Contains(current))
+                    return current;
+                nodeHashSet.Add(current);
+                current = current.Next;
+            }
+
+            return null;
         }
         #endregion
     }

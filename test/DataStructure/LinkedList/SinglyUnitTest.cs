@@ -11,7 +11,13 @@ namespace Ds.Test.LinkedList
         #endregion
 
         #region Private Common Methods
-        private long[] ConvertAllToLong(string commaSeparatedStr) => Array.ConvertAll(commaSeparatedStr.Split(','), long.Parse);
+        private long[] ConvertAllToLong(string commaSeparatedStr)
+        {
+            if (string.IsNullOrEmpty(commaSeparatedStr))
+                return new long[0];
+
+            return Array.ConvertAll(commaSeparatedStr.Split(','), long.Parse);
+        }
         private Node GetNode(Singly singly, long data)
         {
             var current = singly.Head;
@@ -24,84 +30,12 @@ namespace Ds.Test.LinkedList
 
             return null;
         }
-        private void MakeItCircular(Singly singly, long data)
+        private void MakeItCircular(Singly singly, long nodeAtTheStartOfTheLoop)
         {
-            var node = GetNode(singly, data);
+            var node = GetNode(singly, nodeAtTheStartOfTheLoop);
             if (node == null)
                 return;
             singly.Tail.Next = node;
-        }
-        #endregion
-
-        #region UTCs for Public Properties
-        [Theory]
-        [InlineData("1011,2,-3,4,-5,6,7,8,9", 9)]
-        [InlineData("1011,2,-3,4,-5,6,7,8,9", 8)]
-        [InlineData("1011,2,-3,4,-5,6,7,8,9", 7)]
-        [InlineData("1011,2,-3,4,-5,6,7,8,9", 6)]
-        [InlineData("1011,2,-3,4,-5,6,7,8,9", -5)]
-        [InlineData("1011,2,-3,4,-5,6,7,8,9", 4)]
-        [InlineData("1011,2,-3,4,-5,6,7,8,9", -3)]
-        [InlineData("1011,2,-3,4,-5,6,7,8,9", 2)]
-        [InlineData("1011,2,-3,4,-5,6,7,8,9", 1011)]
-        public void HasLoop_ReturnsTrue_WhenTheTailPointsToAnotherNodeInTheList(
-            string actualStr
-            , long nodeDataToWhichTailPointsTo)
-        {
-            var actualSingly = new Singly(ConvertAllToLong(actualStr));
-            var expectedTailPointsToNode = GetNode(actualSingly, nodeDataToWhichTailPointsTo);
-            var expectedHead = actualSingly.Head;
-            var expectedTail = actualSingly.Tail;
-            var expectedCount = actualSingly.Count;
-            MakeItCircular(actualSingly, nodeDataToWhichTailPointsTo);
-
-            var actualHasLoop = actualSingly.HasLoop;
-
-            Assert.NotNull(actualSingly.Head);
-            Assert.NotNull(actualSingly.Tail);
-
-            Assert.False(actualSingly.IsNull);
-            Assert.False(actualSingly.IsEmpty);
-
-            Assert.True(expectedHead.Equals(actualSingly.Head));
-            Assert.True(expectedTail.Equals(actualSingly.Tail));
-            Assert.True(expectedTailPointsToNode.Equals(actualSingly.Tail.Next));
-            Assert.True(expectedHead.Data == actualSingly.Head.Data);
-            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
-            Assert.True(expectedTailPointsToNode.Data == actualSingly.Tail.Next.Data);
-            Assert.True(expectedCount == actualSingly.Count);
-            Assert.True(actualHasLoop);
-        }
-
-        [Theory]
-        [InlineData("1011,2,-3,4,-5,6,7,8,9", 0)]
-        public void HasLoop_ReturnsFalse_WhenTheTailPointsToNull(
-            string actualStr
-            , long nodeDataToWhichTailPointsTo)
-        {
-            var actualSingly = new Singly(ConvertAllToLong(actualStr));
-            var expectedTailPointsToNode = GetNode(actualSingly, nodeDataToWhichTailPointsTo);
-            var expectedHead = actualSingly.Head;
-            var expectedTail = actualSingly.Tail;
-            var expectedCount = actualSingly.Count;
-            MakeItCircular(actualSingly, nodeDataToWhichTailPointsTo);
-
-            var actualHasLoop = actualSingly.HasLoop;
-
-            Assert.Null(expectedTailPointsToNode);
-
-            Assert.NotNull(actualSingly.Head);
-            Assert.NotNull(actualSingly.Tail);
-
-            Assert.False(actualSingly.IsNull);
-            Assert.False(actualSingly.IsEmpty);
-            Assert.False(actualHasLoop);
-
-            Assert.True(expectedHead.Equals(actualSingly.Head));
-            Assert.True(expectedTail.Equals(actualSingly.Tail));
-            Assert.True(expectedHead.Data == actualSingly.Head.Data);
-            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
-            Assert.True(expectedCount == actualSingly.Count);
         }
         #endregion
 
@@ -976,6 +910,134 @@ namespace Ds.Test.LinkedList
             Assert.True(actualSingly.IsEmpty);
             Assert.True(expectedCount == actualSingly.Count);
             Assert.True(expectedData == actualData);
+        }
+
+        [Theory]
+        [InlineData("900,2,-3,4,-5,6,7,8,9")]
+        [InlineData("900,9")]
+        [InlineData("900")]
+        public void LoopExists_ReturnsFalse_WhenNoLoopExistsAndTheListIsNotEmpty(
+            string actualStr)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedResult = false;
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedCount = actualSingly.Count;
+
+            var actualResult = actualSingly.LoopExists();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedCount == actualSingly.Count);
+            Assert.True(expectedResult == actualResult);
+        }
+
+        [Fact]
+        public void LoopExists_ReturnsFalse_WhenNoLoopExistsAndTheListIsEmpty()
+        {
+            var actualSingly = new Singly();
+            var expectedResult = false;
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedCount = actualSingly.Count;
+
+            var actualResult = actualSingly.LoopExists();
+
+            Assert.Null(actualSingly.Head);
+            Assert.Null(actualSingly.Tail);
+            Assert.Null(expectedHead);
+            Assert.Null(expectedTail);
+
+            Assert.False(actualSingly.IsNull);
+
+            Assert.True(actualSingly.IsEmpty);
+            Assert.True(expectedCount == actualSingly.Count);
+            Assert.True(expectedResult == actualResult);
+        }
+
+        [Theory]
+        [InlineData("900", 900)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 9)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 8)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 7)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 6)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", -5)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 4)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", -3)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 2)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 900)]
+        public void LoopExists_ReturnsTrue_WhenLoopExistsAndTheListIsNotEmpty(
+            string actualStr
+            , long dataInTheNodeAtTheStartOfTheLoop)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedResult = true;
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedCount = actualSingly.Count;
+            MakeItCircular(actualSingly, dataInTheNodeAtTheStartOfTheLoop);
+
+            var actualResult = actualSingly.LoopExists();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedCount == actualSingly.Count);
+            Assert.True(expectedResult == actualResult);
+        }
+
+        [Theory]
+        [InlineData("900", 900, 1)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 9, 1)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 8, 2)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 7, 3)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 6, 4)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", -5, 5)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 4, 6)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", -3, 7)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 2, 8)]
+        [InlineData("900,2,-3,4,-5,6,7,8,9", 900, 9)]
+        public void LoopExists_ReturnsNumberOfElementsInALoop_WhenLoopExistsAndTheListIsNotEmpty(
+            string actualStr
+            , long dataInTheNodeAtTheStartOfTheLoop
+            , ulong expectedResult)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedHead = actualSingly.Head;
+            var expectedTail = actualSingly.Tail;
+            var expectedCount = actualSingly.Count;
+            MakeItCircular(actualSingly, dataInTheNodeAtTheStartOfTheLoop);
+
+            var actualResult = actualSingly.LoopSize();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedCount == actualSingly.Count);
+            Assert.True(expectedResult == actualResult);
         }
         #endregion
     }
