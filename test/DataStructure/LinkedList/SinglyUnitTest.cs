@@ -1034,7 +1034,7 @@ namespace Ds.Test.LinkedList
         }
 
         [Theory]
-        [InlineData(-10, 10, 100, 0)]   // For when the list is non-empt and loop does not exists.
+        [InlineData(-10, 10, 100, 0)]   // For when the list is non-empty and loop does not exists.
         [InlineData(-10, 10, -10, 21)]
         [InlineData(-10, 10, -9, 20)]
         [InlineData(-10, 10, -8, 19)]
@@ -1087,6 +1087,129 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedTail.Data == actualSingly.Tail.Data);
             Assert.True(expectedCount == actualSingly.Count);
             Assert.True(expectedSizeOfLoop == actualSizeOfLoop);
+        }
+
+        [Theory]
+        [InlineData(-10, 10, -10)]
+        [InlineData(-10, 10, -9)]
+        [InlineData(-10, 10, -8)]
+        [InlineData(-10, 10, -7)]
+        [InlineData(-10, 10, -6)]
+        [InlineData(-10, 10, -5)]
+        [InlineData(-10, 10, -4)]
+        [InlineData(-10, 10, -3)]
+        [InlineData(-10, 10, -2)]
+        [InlineData(-10, 10, -1)]
+        [InlineData(-10, 10, 0)]
+        [InlineData(-10, 10, 1)]
+        [InlineData(-10, 10, 2)]
+        [InlineData(-10, 10, 3)]
+        [InlineData(-10, 10, 4)]
+        [InlineData(-10, 10, 5)]
+        [InlineData(-10, 10, 6)]
+        [InlineData(-10, 10, 7)]
+        [InlineData(-10, 10, 8)]
+        [InlineData(-10, 10, 9)]
+        [InlineData(-10, 10, 10)]
+        [InlineData(12, 12, 12)]     // For when the list contains only one node and loop exists.
+        public void GetsLoopStartUsingTortoiseAndHare_ReturnsTheNode_WhenLoopExists(
+            long expectedHeadData
+            , long expectedTailData
+            , long expectedDataOfTheNodeAtTheStartOfTheLoop)
+        {
+            var actualSingly = new Singly();
+            for (var i = expectedHeadData; i <= expectedTailData; i++)
+            {
+                actualSingly.AddLast(i);
+            }
+            var expectedNodeAtTheStartOfTheLoop = GetNode(actualSingly, expectedDataOfTheNodeAtTheStartOfTheLoop);
+            var expectedHead = GetNode(actualSingly, expectedHeadData);
+            var expectedTail = GetNode(actualSingly, expectedTailData);
+            var expectedCount = actualSingly.Count;
+            MakeItCircular(actualSingly, expectedDataOfTheNodeAtTheStartOfTheLoop);
+
+            var actualNodeAtTheStartOfTheLoop = actualSingly.GetsLoopStartUsingTortoiseHare();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+            Assert.NotNull(expectedNodeAtTheStartOfTheLoop);
+
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(actualSingly.IsNull);
+
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedNodeAtTheStartOfTheLoop.Equals(actualNodeAtTheStartOfTheLoop));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedNodeAtTheStartOfTheLoop.Data == actualNodeAtTheStartOfTheLoop.Data);
+            Assert.True(expectedCount == actualSingly.Count);
+        }
+
+        [Theory]
+        [InlineData(-10, 10, 100)]   // For when the list is non-empty and loop does not exists.
+        public void GetLoopStartUsingTortoiseAndHare_ReturnsNull_WhenNoLoopExists(
+            long expectedHeadData
+            , long expectedTailData
+            , long expectedDataOfTheNodeAtTheStartOfTheLoop)
+        {
+            var actualSingly = new Singly();
+            for (var i = expectedHeadData; i <= expectedTailData; i++)
+            {
+                actualSingly.AddLast(i);
+            }
+            var expectedNodeAtTheStartOfTheLoop = GetNode(actualSingly, expectedDataOfTheNodeAtTheStartOfTheLoop);
+            var expectedHead = GetNode(actualSingly, expectedHeadData);
+            var expectedTail = GetNode(actualSingly, expectedTailData);
+            var expectedCount = actualSingly.Count;
+            MakeItCircular(actualSingly, expectedDataOfTheNodeAtTheStartOfTheLoop);
+
+            var actualNodeAtTheStartOfTheLoop = actualSingly.GetsLoopStartUsingTortoiseHare();
+
+            Assert.Null(expectedNodeAtTheStartOfTheLoop);
+            Assert.Null(actualNodeAtTheStartOfTheLoop);
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(actualSingly.IsNull);
+
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedCount == actualSingly.Count);
+        }
+
+        [Theory]
+        [InlineData(10, -10, 100)]  // For when the list is empty
+        public void GetLoopsStartUsingTortoiseAndHare_ReturnsNull_WhenListIsEmpty(
+            long expectedHeadData
+            , long expectedTailData
+            , long expectedDataOfTheNodeAtTheStartOfTheLoop)
+        {
+            var actualSingly = new Singly();
+            for (var i = expectedHeadData; i <= expectedTailData; i++)
+            {
+                actualSingly.AddLast(i);
+            }
+            var expectedNodeAtTheStartOfTheLoop = GetNode(actualSingly, expectedDataOfTheNodeAtTheStartOfTheLoop);
+            var expectedHead = GetNode(actualSingly, expectedHeadData);
+            var expectedTail = GetNode(actualSingly, expectedTailData);
+            var expectedCount = actualSingly.Count;
+            MakeItCircular(actualSingly, expectedDataOfTheNodeAtTheStartOfTheLoop);
+
+            var actualNodeAtTheStartOfTheLoop = actualSingly.GetsLoopStartUsingTortoiseHare();
+
+            Assert.Null(expectedNodeAtTheStartOfTheLoop);
+            Assert.Null(actualNodeAtTheStartOfTheLoop);
+            Assert.Null(expectedHead);
+            Assert.Null(expectedTail);
+            Assert.Null(actualSingly.Head);
+            Assert.Null(actualSingly.Tail);
+
+            Assert.True(expectedCount == actualSingly.Count);
         }
         #endregion
     }

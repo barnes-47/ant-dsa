@@ -359,8 +359,11 @@ namespace Ds.LinkedList
         /// Uses The Tortoise and Hare Algorithm.
         /// </summary>
         /// <returns></returns>
-        public Node LoopStart_UsingTortoiseHare()
+        public Node GetsLoopStartUsingTortoiseHare()
         {
+            if (IsEmpty)
+                return null;
+
             var tortoise = Head;
             var hare = Head.Next;
             while(tortoise != null && hare != null)
@@ -370,7 +373,7 @@ namespace Ds.LinkedList
                 if (hare.Equals(tortoise) && hare.Data == tortoise.Data)
                 {
                     tortoise = Head;
-                    while(tortoise != hare)
+                    while(tortoise != hare.Next && tortoise.Data != hare.Next.Data)
                     {
                         tortoise = tortoise.Next;
                         hare = hare.Next;
@@ -390,7 +393,7 @@ namespace Ds.LinkedList
         /// Using the HashSet to store the nodes and returning the one that already exists.
         /// </summary>
         /// <returns></returns>
-        public Node LoopStart_UsingHashSet()
+        public Node GetsLoopStartUsingHashSet()
         {
             var nodeHashSet = new HashSet<Node>();
             var current = Head;
