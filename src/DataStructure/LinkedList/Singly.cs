@@ -25,10 +25,13 @@ namespace Ds.LinkedList
         #region Public Getters
         public Node Head { get; private set; }
         public Node Tail { get; private set; }
-        public ulong Length { get; private set; }
+        public ulong Count { get; private set; }
         public bool IsNull => this == null;
-        public bool IsEmpty => Length == 0 && Head == null && Tail == null;
-        public bool HasLoop => InternalHasLoop();
+        public bool IsEmpty => Count == 0 && Head == null && Tail == null;
+        #endregion
+
+        #region Private Properties
+        
         #endregion
 
         #region Public Constructors
@@ -72,13 +75,13 @@ namespace Ds.LinkedList
             if (IsEmpty)
             {
                 Head = Tail = newNode;
-                ++Length;
+                ++Count;
                 return;
             }
 
             newNode.Next = Head;
             Head = newNode;
-            ++Length;
+            ++Count;
         }
 
         /// <summary>
@@ -93,13 +96,31 @@ namespace Ds.LinkedList
             if (IsEmpty)
             {
                 Head = Tail = newNode;
-                ++Length;
+                ++Count;
                 return;
             }
 
             Tail.Next = newNode;
             Tail = newNode;
-            ++Length;
+            ++Count;
+        }
+
+        /// <summary>
+        /// Gets the node for the specified data, if it exists in the list, null otherwise.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public Node Find(long data)
+        {
+            var current = Head;
+            while(current != null)
+            {
+                if (current.Data == data)
+                    return current;
+                current = current.Next;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -114,7 +135,7 @@ namespace Ds.LinkedList
             if (IsHead(data))
             {
                 Head = Head.Next;
-                if (--Length == 0)
+                if (--Count == 0)
                     Tail = null;
 
                 return true;
@@ -130,7 +151,7 @@ namespace Ds.LinkedList
                     if (previous.Next == null)
                         Tail = previous;
                     current.Next = null;
-                    --Length;
+                    --Count;
 
                     return true;
                 }
@@ -174,7 +195,7 @@ namespace Ds.LinkedList
                         Next = current.Next
                     };
                     current.Next = newNode;
-                    ++Length;
+                    ++Count;
                     break;
                 }
                 current = current.Next;
@@ -195,7 +216,7 @@ namespace Ds.LinkedList
                 Next = Head.Next
             };
             Head.Next = newNode;
-            ++Length;
+            ++Count;
         }
 
         /// <summary>
@@ -241,23 +262,237 @@ namespace Ds.LinkedList
         #endregion
 
         #region Geeks-For-Geeks Public Methods
-
-        #endregion
-
-        #region Private Methods
-        private bool InternalHasLoop()
+        /// <summary>
+        /// Returns an element at the specified index, 0 otherwise.
+        /// Follows a zero-based index.
+        /// </summary>
+        /// <param name="index">The index</param>
+        /// <returns></returns>
+        public long ElementAt(ulong index)
         {
-            var hashSet = new HashSet<Node>();
-            var current = Head;
+            if (index >= Count)
+                return 0;
+            if (index == 0)
+                return Head.Data;
+            if (index == Count - 1)
+                return Tail.Data;
+
+            var current = Head.Next;
+            var internalIndex = 1UL;
             while(current != null)
             {
-                if (hashSet.Contains(current))
-                    return true;
-                hashSet.Add(current);
+                if (internalIndex++ == index)
+                    return current.Data;
                 current = current.Next;
             }
 
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns true if a cycle is detected in the list, false otherwise.
+        /// Uses "The Tortoise and the Hare Algorithm".
+        /// </summary>
+        /// <returns></returns>
+        public bool LoopExists()
+        {
+            if (IsEmpty)
+                return false;
+            if (Tail.Next == null)  // No loop detected when Tail points to --> null.
+                return false;
+            if (Tail.Next.Equals(Head) && Tail.Next.Data == Head.Data)  // Loop detected when Tail points to --> Head.
+                return true;
+            if (Tail.Next.Equals(Tail) && Tail.Next.Data == Tail.Data)  // Loop detected when Tail points to --> Tail.
+                return true;
+
+            var tortoise = Head;
+            var hare = Head.Next;
+            while(hare != null)
+            {
+                if (hare.Next == null)
+                    return false;
+                if (hare.Equals(tortoise) && hare.Data == tortoise.Data)
+                    return true;
+                hare = hare.Next.Next;
+                tortoise = tortoise.Next;
+            }
+
             return false;
+        }
+
+        /// <summary>
+        /// Gets the number of elements forming the loop in the list.
+        /// </summary>
+        /// <returns></returns>
+        public ulong LoopSize()
+        {
+            if (IsEmpty)
+                return 0;
+
+            var tortoise = Head;
+            var hare = Head.Next;
+            while(tortoise != null && hare != null)
+            {
+                if (hare.Next == null)
+                    return 0;
+                if (hare.Equals(tortoise) && hare.Data == tortoise.Data)
+                {
+                    var count = 1UL;
+                    var temp = tortoise;
+                    while(temp.Next != tortoise)
+                    {
+                        ++count;
+                        temp = temp.Next;
+                    }
+
+                    return count;
+                }
+                hare = hare.Next.Next;
+                tortoise = tortoise.Next;
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Gets the first node of the loop, null if no loop is detected.
+        /// Uses The Tortoise and Hare Algorithm.
+        /// </summary>
+        /// <returns></returns>
+        public Node GetsLoopStartUsingTortoiseHare()
+        {
+            if (IsEmpty)
+                return null;
+
+            var tortoise = Head;
+            var hare = Head.Next;
+            while(tortoise != null && hare != null)
+            {
+                if (hare.Next == null)
+                    return null;
+                if (hare.Equals(tortoise) && hare.Data == tortoise.Data)
+                {
+                    tortoise = Head;
+                    while(tortoise != hare.Next && tortoise.Data != hare.Next.Data)
+                    {
+                        tortoise = tortoise.Next;
+                        hare = hare.Next;
+                    }
+
+                    return tortoise;
+                }
+                hare = hare.Next.Next;
+                tortoise = tortoise.Next;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the first node of the loop, null if no loop is detected.
+        /// Using the HashSet to store the nodes and returning the one that already exists.
+        /// </summary>
+        /// <returns></returns>
+        public Node GetsLoopStartUsingHashSet()
+        {
+            var nodeHashSet = new HashSet<Node>();
+            var current = Head;
+            while(current != null)
+            {
+                if (nodeHashSet.Contains(current))
+                    return current;
+                nodeHashSet.Add(current);
+                current = current.Next;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Reverses a the list without creating a new list.
+        /// </summary>
+        public void Reverse()
+        {
+            if (IsEmpty)
+                return;
+
+            Node current = Head, previous = null;
+            while(current != null)
+            {
+                var next = current.Next;
+                current.Next = previous;
+                previous = current;
+                current = next;
+            }
+
+            current = Head;
+            Head = Tail;
+            Tail = current;
+        }
+
+        /// <summary>
+        /// Checks if the list is a palindrome or not.
+        /// </summary>
+        /// <returns>true if the list is palindrome, false otherwise.</returns>
+        public bool IsPalindrome()
+        {
+            var reverseSingly = ReverseClone();
+            if (reverseSingly == null)
+                return false;
+
+            var reverseCurrent = reverseSingly.Head;
+            var actualCurrent = Head;
+            while(actualCurrent != null && reverseCurrent != null)
+            {
+                if (actualCurrent.Data != reverseCurrent.Data)
+                    return false;
+                actualCurrent = actualCurrent.Next;
+                reverseCurrent = reverseCurrent.Next;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Creates a new list with the data of current list.
+        /// List must have atleast one element to perform clone operation.
+        /// </summary>
+        /// <returns>Head node of the newly created list. Null if the list is empty.</returns>
+        public Singly Clone()
+        {
+            if (IsEmpty)
+                return null;
+
+            var newSingly = new Singly();
+            var current = Head;
+            while(current != null)
+            {
+                newSingly.AddLast(current.Data);
+                current = current.Next;
+            }
+
+            return newSingly;
+        }
+
+        /// <summary>
+        /// Creates a new list in reverse order with the data of current list.
+        /// List must have atleast one element to perform reverse-clone operation.
+        /// </summary>
+        /// <returns>Head node of the newly created list. Null if the list is empty.</returns>
+        public Singly ReverseClone()
+        {
+            if (IsEmpty)
+                return null;
+
+            var newSingly = new Singly();
+            var current = Head;
+            while(current != null)
+            {
+                newSingly.AddFirst(current.Data);
+                current = current.Next;
+            }
+
+            return newSingly;
         }
         #endregion
     }
