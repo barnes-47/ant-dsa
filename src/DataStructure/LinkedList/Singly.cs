@@ -407,6 +407,25 @@ namespace Ds.LinkedList
 
             return null;
         }
+
+        /// <summary>
+        /// Reverses a the list.
+        /// </summary>
+        public void Reverse()
+        {
+            Node current = Head, previous = null;
+            while(current != null)
+            {
+                var next = current.Next;
+                current.Next = previous;
+                previous = current;
+                current = next;
+            }
+
+            current = Head;
+            Head = Tail;
+            Tail = current;
+        }
         #endregion
     }
 }

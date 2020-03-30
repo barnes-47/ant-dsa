@@ -1211,6 +1211,44 @@ namespace Ds.Test.LinkedList
 
             Assert.True(expectedCount == actualSingly.Count);
         }
+
+        [Theory]
+        [InlineData(-10, 10)]
+        public void Reverse_ReversesTheList_WhenListIsNotEmpty(
+            long expectedHeadData
+            , long expectedTailData)
+        {
+            var expectedSingly = new Singly();
+            for (var i = expectedHeadData; i <= expectedTailData; i++)
+            {
+                expectedSingly.AddFirst(i);
+            }
+
+            var actualSingly = new Singly();
+            for (var i = expectedHeadData; i <= expectedTailData; i++)
+            {
+                actualSingly.AddLast(i);
+            }
+
+            actualSingly.Reverse();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(actualSingly.IsNull);
+
+            Assert.True(expectedSingly.Count == actualSingly.Count);
+
+            var expectedCurrent = expectedSingly.Head;
+            var actualCurrent = actualSingly.Head;
+            while (expectedCurrent != null && actualCurrent != null)
+            {
+                Assert.True(expectedCurrent.Data == actualCurrent.Data);
+                expectedCurrent = expectedCurrent.Next;
+                actualCurrent = actualCurrent.Next;
+            }
+        }
         #endregion
     }
 }
