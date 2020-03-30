@@ -409,10 +409,13 @@ namespace Ds.LinkedList
         }
 
         /// <summary>
-        /// Reverses a the list.
+        /// Reverses a the list without creating a new list.
         /// </summary>
         public void Reverse()
         {
+            if (IsEmpty)
+                return;
+
             Node current = Head, previous = null;
             while(current != null)
             {
@@ -425,6 +428,71 @@ namespace Ds.LinkedList
             current = Head;
             Head = Tail;
             Tail = current;
+        }
+
+        /// <summary>
+        /// Checks if the list is a palindrome or not.
+        /// </summary>
+        /// <returns>true if the list is palindrome, false otherwise.</returns>
+        public bool IsPalindrome()
+        {
+            var reverseSingly = ReverseClone();
+            if (reverseSingly == null)
+                return false;
+
+            var reverseCurrent = reverseSingly.Head;
+            var actualCurrent = Head;
+            while(actualCurrent != null && reverseCurrent != null)
+            {
+                if (actualCurrent.Data != reverseCurrent.Data)
+                    return false;
+                actualCurrent = actualCurrent.Next;
+                reverseCurrent = reverseCurrent.Next;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Creates a new list with the data of current list.
+        /// List must have atleast one element to perform clone operation.
+        /// </summary>
+        /// <returns>Head node of the newly created list. Null if the list is empty.</returns>
+        public Singly Clone()
+        {
+            if (IsEmpty)
+                return null;
+
+            var newSingly = new Singly();
+            var current = Head;
+            while(current != null)
+            {
+                newSingly.AddLast(current.Data);
+                current = current.Next;
+            }
+
+            return newSingly;
+        }
+
+        /// <summary>
+        /// Creates a new list in reverse order with the data of current list.
+        /// List must have atleast one element to perform reverse-clone operation.
+        /// </summary>
+        /// <returns>Head node of the newly created list. Null if the list is empty.</returns>
+        public Singly ReverseClone()
+        {
+            if (IsEmpty)
+                return null;
+
+            var newSingly = new Singly();
+            var current = Head;
+            while(current != null)
+            {
+                newSingly.AddFirst(current.Data);
+                current = current.Next;
+            }
+
+            return newSingly;
         }
         #endregion
     }
