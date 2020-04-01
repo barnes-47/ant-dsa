@@ -11,6 +11,8 @@ namespace Ds.Test.LinkedList
         #endregion
 
         #region Private Common Methods
+        private long[] ConvertAllToLong(char[] charArray)
+            => Array.ConvertAll(charArray, x => (long)char.GetNumericValue(x));
         private long[] ConvertAllToLong(string commaSeparatedStr)
         {
             if (string.IsNullOrEmpty(commaSeparatedStr))
@@ -1409,6 +1411,72 @@ namespace Ds.Test.LinkedList
             Assert.True(actualSingly.Head.Data == actualSingly.Tail.Data);
             Assert.True(expectedCount == actualSingly.Count);
             Assert.True(expectedResult == actualResult);
+        }
+
+        [Fact]
+        public void DecimalEquivalent_ReturnsZero_WhenListIsEmpty()
+        {
+            var actualSingly = new Singly();
+
+            var actualResult = actualSingly.DecimalEquivalent();
+
+            Assert.Null(actualSingly.Head);
+            Assert.Null(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+
+            Assert.True(actualSingly.IsEmpty);
+            Assert.True(0UL == actualSingly.Count);
+            Assert.True(0L == actualResult);
+        }
+
+        [Theory]
+        [InlineData(uint.MaxValue)]
+        [InlineData(ushort.MaxValue)]
+        [InlineData(long.MaxValue)]
+        [InlineData(long.MinValue)]
+        [InlineData(int.MaxValue)]
+        [InlineData(int.MinValue)]
+        [InlineData(short.MaxValue)]
+        [InlineData(short.MinValue)]
+        public void DecimalEquivalent_ReturnsDecimal_WhenListHadTwoOrMoreElements(long expectedEquivalent)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(Convert.ToString(expectedEquivalent, 2).ToCharArray()));
+            var expectedCount = actualSingly.Count;
+
+            var actualEquivalent = actualSingly.DecimalEquivalent();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(actualSingly.Head.Equals(actualSingly.Tail));
+
+            Assert.True(expectedCount == actualSingly.Count);
+            Assert.True(expectedEquivalent == actualEquivalent);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void DecimalEquivalent_ReturnsDecimal_WhenListHasOnlyOneElement(long expectedEquivalent)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(Convert.ToString(expectedEquivalent, 2).ToCharArray()));
+            var expectedCount = actualSingly.Count;
+
+            var actualEquivalent = actualSingly.DecimalEquivalent();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+
+            Assert.True(actualSingly.Head.Equals(actualSingly.Tail));
+            Assert.True(actualSingly.Head.Data == actualSingly.Tail.Data);
+            Assert.True(expectedCount == actualSingly.Count);
+            Assert.True(expectedEquivalent == actualEquivalent);
         }
         #endregion
     }

@@ -527,6 +527,26 @@ namespace Ds.LinkedList
 
             return newSingly;
         }
+
+        /// <summary>
+        /// Returns a decimal equivalent of the binary linked list.
+        /// </summary>
+        /// <returns></returns>
+        public long DecimalEquivalent()
+        {
+            if (IsEmpty)
+                return 0L;
+
+            var current = Head;
+            var decimalResult = 0L;
+            while(current != null)
+            {
+                decimalResult = (long)(decimalResult << 1) + current.Data;
+                current = current.Next;
+            }
+
+            return decimalResult;
+        }
         #endregion
 
         #region Private Methods
