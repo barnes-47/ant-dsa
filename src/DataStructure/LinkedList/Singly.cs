@@ -31,7 +31,8 @@ namespace Ds.LinkedList
         #endregion
 
         #region Private Properties
-        
+        private bool IsCountOdd => (Count & 1UL) == 1UL;
+        private bool IsCountEvent => !IsCountOdd;
         #endregion
 
         #region Public Constructors
@@ -455,18 +456,47 @@ namespace Ds.LinkedList
         /// <returns>true if the list is palindrome, false otherwise.</returns>
         public bool IsPalindrome()
         {
-            var reverseSingly = ReverseClone();
-            if (reverseSingly == null)
+            //var reverseSingly = ReverseClone();
+            //if (reverseSingly == null)
+            //    return false;
+
+            //var reverseCurrent = reverseSingly.Head;
+            //var actualCurrent = Head;
+            //while(actualCurrent != null && reverseCurrent != null)
+            //{
+            //    if (actualCurrent.Data != reverseCurrent.Data)
+            //        return false;
+            //    actualCurrent = actualCurrent.Next;
+            //    reverseCurrent = reverseCurrent.Next;
+            //}
+
+            //return true;
+
+            if (IsEmpty)
+                return false;
+            if (Count == 1)
+                return true;
+            if (Count == 2 || Count == 3)
+                return Head.Data == Tail.Data;
+            if (Head.Data != Tail.Data)
                 return false;
 
-            var reverseCurrent = reverseSingly.Head;
-            var actualCurrent = Head;
-            while(actualCurrent != null && reverseCurrent != null)
+            var middleNode = IsCountOdd ? InternalGetMiddleNode().Next : InternalGetMiddleNode();
+            var reverseSecondHalf = new Singly();
+            while(middleNode != null)
             {
-                if (actualCurrent.Data != reverseCurrent.Data)
+                reverseSecondHalf.AddFirst(middleNode.Data);
+                middleNode = middleNode.Next;
+            }
+
+            var reverseCurrent = reverseSecondHalf.Head;
+            var actualCurrent = Head;
+            while(reverseCurrent != null)
+            {
+                if (reverseCurrent.Data != actualCurrent.Data)
                     return false;
-                actualCurrent = actualCurrent.Next;
                 reverseCurrent = reverseCurrent.Next;
+                actualCurrent = actualCurrent.Next;
             }
 
             return true;
@@ -512,6 +542,23 @@ namespace Ds.LinkedList
             }
 
             return newSingly;
+        }
+        #endregion
+
+        #region Private Methods
+        private Node InternalGetMiddleNode()
+        {
+            if (IsEmpty)
+                return null;
+
+            var nodeIsAt = (ulong)Count / 2;
+            var current = Head;
+            while(nodeIsAt-- != 0)
+            {
+                current = current.Next;
+            }
+
+            return current;
         }
         #endregion
     }

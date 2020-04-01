@@ -1303,6 +1303,113 @@ namespace Ds.Test.LinkedList
                 actualCurrent = actualCurrent.Next;
             }
         }
+
+        [Fact]
+        public void IsPalindrome_ReturnsFalse_WhenListIsEmpty()
+        {
+            var actualSingly = new Singly();
+
+            var actualResult = actualSingly.IsPalindrome();
+
+            Assert.Null(actualSingly.Head);
+            Assert.Null(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualResult);
+
+            Assert.True(actualSingly.IsEmpty);
+        }
+
+        [Theory]
+        [InlineData("1,2", 2)]
+        [InlineData("-1,1", 2)]
+        [InlineData("2,5", 2)]
+        [InlineData("1,2,3", 3)]
+        [InlineData("-1,1,2", 3)]
+        [InlineData("2,5,4", 3)]
+        [InlineData("-1,-2,-3,-4,0,-4,-3,-2,-2", 9)]
+        [InlineData("-1,-2,-3,-4,0,-1,-3,-2,-1", 9)]
+        [InlineData("-1,-2,-3,-4,0,-4,-1,-2,-1", 9)]
+        [InlineData("-1,-2,-3,-4,0,-4,-3,-1,-1", 9)]
+        [InlineData("10,8,6,4,4,6,8,11", 8)]
+        [InlineData("10,8,6,4,4,6,5,10", 8)]
+        [InlineData("10,8,6,4,4,5,8,10", 8)]
+        [InlineData("10,8,6,4,5,6,8,10", 8)]
+        public void IsPalindrome_ReturnsFalse_WhenListHasTwoOrMoreElements(
+            string str
+            , ulong expectedCount)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(str));
+
+            var actualResult = actualSingly.IsPalindrome();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(actualSingly.Head.Equals(actualSingly.Tail));
+            Assert.False(actualResult);
+
+            Assert.True(expectedCount == actualSingly.Count);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(-100)]
+        [InlineData(8960789)]
+        public void IsPalindrome_ReturnsTrue_WhenListHasOnlyOneElement(
+            long expectedHeadData)
+        {
+            var expectedCount = 1UL;
+            var expectedResult = true;
+            var actualSingly = new Singly();
+            actualSingly.Add(expectedHeadData);
+
+            var actualResult = actualSingly.IsPalindrome();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+
+            Assert.True(actualSingly.Head.Equals(actualSingly.Tail));
+            Assert.True(actualSingly.Head.Data == actualSingly.Tail.Data);
+            Assert.True(expectedCount == actualSingly.Count);
+            Assert.True(expectedResult == actualResult);
+        }
+
+        [Theory]
+        [InlineData("1,1", 2)]
+        [InlineData("-100,-100", 2)]
+        [InlineData("5,5", 2)]
+        [InlineData("11,2,11", 3)]
+        [InlineData("2,1,2", 3)]
+        [InlineData("4,5,4", 3)]
+        [InlineData("-1,-2,-3,-4,0,-4,-3,-2,-1", 9)]
+        [InlineData("10,8,6,4,4,6,8,10", 8)]
+        [InlineData("100,10,8,6,4,99,4,6,8,10,100", 11)]
+        public void IsPalindrome_ReturnsTrue_WhenListHasTwoOrMoreElements(
+            string str
+            , ulong expectedCount)
+        {
+            var expectedResult = true;
+            var actualSingly = new Singly(ConvertAllToLong(str));
+
+            var actualResult = actualSingly.IsPalindrome();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(actualSingly.Head.Equals(actualSingly.Tail));
+
+            Assert.True(actualSingly.Head.Data == actualSingly.Tail.Data);
+            Assert.True(expectedCount == actualSingly.Count);
+            Assert.True(expectedResult == actualResult);
+        }
         #endregion
     }
 }
