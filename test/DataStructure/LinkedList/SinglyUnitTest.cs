@@ -912,6 +912,60 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedData == actualData);
         }
 
+        [Fact]
+        public void MiddleElement_ReturnsZero_WhenListIsEmpty()
+        {
+            var actualSingly = new Singly();
+            var expectedResult = 0L;
+            var expectedCount = 0UL;
+
+            var actualResult = actualSingly.MiddleElement();
+
+            Assert.Null(actualSingly.Head);
+            Assert.Null(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+
+            Assert.True(actualSingly.IsEmpty);
+            Assert.True(expectedCount == actualSingly.Count);
+            Assert.True(expectedResult == actualResult);
+        }
+
+        [Theory]
+        [InlineData(12, 12, 12, 1)]     // List with 1-element
+        [InlineData(-1, 0, 0, 2)]       // List with 2-elements
+        [InlineData(0, 1, 1, 2)]        // List with 2-elements
+        [InlineData(-1, 1, 0, 3)]       // List with 3-elements
+        [InlineData(-5, 5, 0, 11)]      // List with 11-elements
+        [InlineData(-9, 10, 1, 20)]     // List with 20-elements
+        [InlineData(-8, 3, -2, 12)]     // List with 12-elements
+        [InlineData(-99, 100, 1, 200)]  // List with 200-elements
+        public void MiddleElement_ReturnsTheMiddleElement_WhenListIsNotEmpty(
+            long expectedHeadData
+            , long expectedTailData
+            , long expectedResult
+            , ulong expectedCount)
+        {
+            var actualSingly = new Singly();
+            for (var i = expectedHeadData; i <= expectedTailData; i++)
+            {
+                actualSingly.AddLast(i);
+            }
+
+            var actualResult = actualSingly.MiddleElement();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(actualSingly.IsNull);
+
+            Assert.True(expectedHeadData == actualSingly.Head.Data);
+            Assert.True(expectedTailData == actualSingly.Tail.Data);
+            Assert.True(expectedCount == actualSingly.Count);
+            Assert.True(expectedResult == actualResult);
+        }
+
         [Theory]
         [InlineData("900,2,-3,4,-5,6,7,8,9")]
         [InlineData("900,9")]

@@ -290,6 +290,25 @@ namespace Ds.LinkedList
         }
 
         /// <summary>
+        /// Gets the middle element of the list. Returns 0 if list is empty.
+        /// </summary>
+        /// <returns></returns>
+        public long MiddleElement()
+        {
+            if (IsEmpty)
+                return 0;
+
+            var elementIsAt = (ulong)Count / 2;
+            var current = Head;
+            while(elementIsAt-- != 0)
+            {
+                current = current.Next;
+            }
+
+            return current.Data;
+        }
+
+        /// <summary>
         /// Returns true if a cycle is detected in the list, false otherwise.
         /// Uses "The Tortoise and the Hare Algorithm".
         /// </summary>
