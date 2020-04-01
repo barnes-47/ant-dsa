@@ -456,22 +456,6 @@ namespace Ds.LinkedList
         /// <returns>true if the list is palindrome, false otherwise.</returns>
         public bool IsPalindrome()
         {
-            //var reverseSingly = ReverseClone();
-            //if (reverseSingly == null)
-            //    return false;
-
-            //var reverseCurrent = reverseSingly.Head;
-            //var actualCurrent = Head;
-            //while(actualCurrent != null && reverseCurrent != null)
-            //{
-            //    if (actualCurrent.Data != reverseCurrent.Data)
-            //        return false;
-            //    actualCurrent = actualCurrent.Next;
-            //    reverseCurrent = reverseCurrent.Next;
-            //}
-
-            //return true;
-
             if (IsEmpty)
                 return false;
             if (Count == 1)
