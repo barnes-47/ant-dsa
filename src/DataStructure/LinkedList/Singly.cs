@@ -38,7 +38,7 @@ namespace Ds.LinkedList
         #region Public Constructors
         public Singly()
         {
-            
+
         }
 
         public Singly(long value)
@@ -114,7 +114,7 @@ namespace Ds.LinkedList
         public Node Find(long data)
         {
             var current = Head;
-            while(current != null)
+            while (current != null)
             {
                 if (current.Data == data)
                     return current;
@@ -187,9 +187,9 @@ namespace Ds.LinkedList
             }
 
             var current = Head.Next;
-            while(current != null)
+            while (current != null)
             {
-                if(current.Data == existingData)
+                if (current.Data == existingData)
                 {
                     var newNode = new Node(newData)
                     {
@@ -251,7 +251,7 @@ namespace Ds.LinkedList
                 return true;
 
             var current = Head.Next;
-            while(current != null)
+            while (current != null)
             {
                 if (current.Data == data)
                     return true;
@@ -280,7 +280,7 @@ namespace Ds.LinkedList
 
             var current = Head.Next;
             var internalIndex = 1UL;
-            while(current != null)
+            while (current != null)
             {
                 if (internalIndex++ == index)
                     return current.Data;
@@ -301,7 +301,7 @@ namespace Ds.LinkedList
 
             var elementIsAt = (ulong)Count / 2;
             var current = Head;
-            while(elementIsAt-- != 0)
+            while (elementIsAt-- != 0)
             {
                 current = current.Next;
             }
@@ -327,7 +327,7 @@ namespace Ds.LinkedList
 
             var tortoise = Head;
             var hare = Head.Next;
-            while(hare != null)
+            while (hare != null)
             {
                 if (hare.Next == null)
                     return false;
@@ -351,7 +351,7 @@ namespace Ds.LinkedList
 
             var tortoise = Head;
             var hare = Head.Next;
-            while(tortoise != null && hare != null)
+            while (tortoise != null && hare != null)
             {
                 if (hare.Next == null)
                     return 0;
@@ -359,7 +359,7 @@ namespace Ds.LinkedList
                 {
                     var count = 1UL;
                     var temp = tortoise;
-                    while(temp.Next != tortoise)
+                    while (temp.Next != tortoise)
                     {
                         ++count;
                         temp = temp.Next;
@@ -386,14 +386,14 @@ namespace Ds.LinkedList
 
             var tortoise = Head;
             var hare = Head.Next;
-            while(tortoise != null && hare != null)
+            while (tortoise != null && hare != null)
             {
                 if (hare.Next == null)
                     return null;
                 if (hare.Equals(tortoise) && hare.Data == tortoise.Data)
                 {
                     tortoise = Head;
-                    while(tortoise != hare.Next && tortoise.Data != hare.Next.Data)
+                    while (tortoise != hare.Next && tortoise.Data != hare.Next.Data)
                     {
                         tortoise = tortoise.Next;
                         hare = hare.Next;
@@ -417,7 +417,7 @@ namespace Ds.LinkedList
         {
             var nodeHashSet = new HashSet<Node>();
             var current = Head;
-            while(current != null)
+            while (current != null)
             {
                 if (nodeHashSet.Contains(current))
                     return current;
@@ -437,7 +437,7 @@ namespace Ds.LinkedList
                 return;
 
             Node current = Head, previous = null;
-            while(current != null)
+            while (current != null)
             {
                 var next = current.Next;
                 current.Next = previous;
@@ -467,7 +467,7 @@ namespace Ds.LinkedList
 
             var middleNode = IsCountOdd ? InternalGetMiddleNode().Next : InternalGetMiddleNode();
             var reverseSecondHalf = new Singly();
-            while(middleNode != null)
+            while (middleNode != null)
             {
                 reverseSecondHalf.AddFirst(middleNode.Data);
                 middleNode = middleNode.Next;
@@ -475,7 +475,7 @@ namespace Ds.LinkedList
 
             var reverseCurrent = reverseSecondHalf.Head;
             var actualCurrent = Head;
-            while(reverseCurrent != null)
+            while (reverseCurrent != null)
             {
                 if (reverseCurrent.Data != actualCurrent.Data)
                     return false;
@@ -498,7 +498,7 @@ namespace Ds.LinkedList
 
             var newSingly = new Singly();
             var current = Head;
-            while(current != null)
+            while (current != null)
             {
                 newSingly.AddLast(current.Data);
                 current = current.Next;
@@ -519,7 +519,7 @@ namespace Ds.LinkedList
 
             var newSingly = new Singly();
             var current = Head;
-            while(current != null)
+            while (current != null)
             {
                 newSingly.AddFirst(current.Data);
                 current = current.Next;
@@ -539,7 +539,7 @@ namespace Ds.LinkedList
 
             var current = Head;
             var decimalResult = 0L;
-            while(current != null)
+            while (current != null)
             {
                 decimalResult = (long)(decimalResult << 1) + current.Data;
                 current = current.Next;
@@ -547,9 +547,91 @@ namespace Ds.LinkedList
 
             return decimalResult;
         }
+
+        public void Sort()
+        {
+            if (IsEmpty)
+                return;
+
+            Head = InternalMergeSort(Head);
+            Count = 0;
+            if (Head == null)
+            {
+                Tail = Head;
+                return;
+            }
+
+            var current = Head;
+            Count = 1;
+            while (current.Next != null)
+            {
+                ++Count;
+                current = current.Next;
+            }
+            Tail = current;
+        }
         #endregion
 
         #region Private Methods
+        private Node InternalMergeSort(Node head)
+        {
+            if (head == null)
+                return null;
+            if (head.Next == null)
+                return head;
+
+            var middle = InternalGetMiddleNodeUsingTortoiseHare(head);
+            var nextToMiddle = middle.Next;
+            middle.Next = null;
+
+            var left = InternalMergeSort(head);
+            var right = InternalMergeSort(nextToMiddle);
+            var sortedListHead = InternalSortedMerge(left, right);
+
+            return sortedListHead;
+        }
+        private Node InternalSortedMerge(Node left, Node right)
+        {
+            if (left == null)
+                return right;
+            if (right == null)
+                return left;
+
+            Node result;
+            if (left.Data < right.Data)
+            {
+                result = left;
+                result.Next = InternalSortedMerge(left.Next, right);
+            }
+            else
+            {
+                result = right;
+                result.Next = InternalSortedMerge(left, right.Next);
+            }
+
+            return result;
+        }
+        private Node InternalGetMiddleNodeUsingTortoiseHare(Node head)
+        {
+            // When list either empty or contains 1 or 2 elements.
+            if (head == null || head.Next == null || head.Next.Next == null)
+                return head;
+
+            var tortoise = head;
+            var hare = head.Next;
+            while (hare != null)
+            {
+                hare = hare.Next;
+                if (hare == null)
+                    break;
+
+                hare = hare.Next;
+                tortoise = tortoise.Next;
+            }
+
+            return tortoise;
+        }
+
         private Node InternalGetMiddleNode()
         {
             if (IsEmpty)
@@ -557,7 +639,7 @@ namespace Ds.LinkedList
 
             var nodeIsAt = (ulong)Count / 2;
             var current = Head;
-            while(nodeIsAt-- != 0)
+            while (nodeIsAt-- != 0)
             {
                 current = current.Next;
             }

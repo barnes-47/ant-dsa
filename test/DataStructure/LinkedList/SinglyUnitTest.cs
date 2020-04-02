@@ -1478,6 +1478,55 @@ namespace Ds.Test.LinkedList
             Assert.True(expectedCount == actualSingly.Count);
             Assert.True(expectedEquivalent == actualEquivalent);
         }
+
+        [Theory]
+        [InlineData("9,1,8,7,6,5,2,4,3", "1,2,3,4,5,6,7,8,9")]
+        [InlineData("50,4,10,-1,100,-2,8,-10", "-10,-2,-1,4,8,10,50,100")]
+        [InlineData("99", "99")]
+        [InlineData("45,23", "23,45")]
+        [InlineData("23,45", "23,45")]
+        public void Sort_SortsTheList_UsesMergeSortInternally_WhenListHasMoreThanOneElement(
+            string actualStr
+            , string expectedStr)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedSingly = new Singly(ConvertAllToLong(expectedStr));
+
+            actualSingly.Sort();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+
+            Assert.True(expectedSingly.Count == actualSingly.Count);
+
+            var actualCurrent = actualSingly.Head;
+            var expectedCurrent = expectedSingly.Head;
+            while(expectedCurrent != null && actualCurrent != null)
+            {
+                Assert.True(expectedCurrent.Data == actualCurrent.Data);
+                expectedCurrent = expectedCurrent.Next;
+                actualCurrent = actualCurrent.Next;
+            }
+        }
+
+        [Fact]
+        public void Sort_DoesNothing_WhenTheListIsEmpty()
+        {
+            var actualSingly = new Singly();
+
+            actualSingly.Sort();
+
+            Assert.Null(actualSingly.Head);
+            Assert.Null(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+
+            Assert.True(actualSingly.IsEmpty);
+            Assert.True(0UL == actualSingly.Count);
+        }
         #endregion
     }
 }
