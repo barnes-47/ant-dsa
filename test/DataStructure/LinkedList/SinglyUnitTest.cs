@@ -1527,6 +1527,116 @@ namespace Ds.Test.LinkedList
             Assert.True(actualSingly.IsEmpty);
             Assert.True(0UL == actualSingly.Count);
         }
+
+        [Theory]
+        [InlineData("1,1,1,2,3,4,5,6,6,7,8", 1, 8, "1,2,3,4,5,6,7,8")]
+        [InlineData("-1,-1,3,3,4,4,5,5,6", -1, 6, "-1,3,4,5,6")]
+        [InlineData("-10,-5,-1,0,1,2,3,4,4", -10, 4, "-10,-5,-1,0,1,2,3,4")]
+        [InlineData("1,2,3,4,5,6", 1, 6, "1,2,3,4,5,6")]
+        [InlineData("10,11", 10, 11, "10,11")]
+        public void RemoveDuplicatesFromSortedList_RemovesDuplicates_WhenTheListHasTwoOrMoreElements(
+            string actualStr
+            , long expectedHeadData
+            , long expectedTailData
+            , string expectedStr)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedSingly = new Singly(ConvertAllToLong(expectedStr));
+            var expectedHead = GetNode(actualSingly, expectedHeadData);
+            var expectedTail = GetNode(actualSingly, expectedTailData);
+
+            actualSingly.RemoveDuplicatesFromSortedList();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(actualSingly.IsNull);
+
+            Assert.True(expectedHead.Equals(actualSingly.Head));
+            Assert.True(expectedTail.Equals(actualSingly.Tail));
+            Assert.True(expectedHead.Data == actualSingly.Head.Data);
+            Assert.True(expectedTail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedSingly.Count == actualSingly.Count);
+
+            var actualCurrent = actualSingly.Head;
+            var expectedCurrent = expectedSingly.Head;
+            while(actualCurrent != null && expectedCurrent != null)
+            {
+                Assert.True(expectedCurrent.Data == actualCurrent.Data);
+                actualCurrent = actualCurrent.Next;
+                expectedCurrent = expectedCurrent.Next;
+            }
+        }
+
+        [Theory]
+        [InlineData("5,5", "5")]
+        [InlineData("10,10", "10")]
+        public void RemoveDuplicatesFromSortedList_RemovesDuplicates_WhenTheListHasOnlyTwoIdenticalElements(
+            string actualStr
+            , string expectedStr)
+        {
+            var actualSingly = new Singly(ConvertAllToLong(actualStr));
+            var expectedSingly = new Singly(ConvertAllToLong(expectedStr));
+
+            actualSingly.RemoveDuplicatesFromSortedList();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsEmpty);
+            Assert.False(actualSingly.IsNull);
+
+            Assert.True(actualSingly.Head.Equals(actualSingly.Tail));
+            Assert.True(actualSingly.Head.Data == actualSingly.Tail.Data);
+            Assert.True(expectedSingly.Head.Data == actualSingly.Head.Data);
+            Assert.True(expectedSingly.Tail.Data == actualSingly.Tail.Data);
+            Assert.True(expectedSingly.Count == actualSingly.Count);
+
+            var actualCurrent = actualSingly.Head;
+            var expectedCurrent = expectedSingly.Head;
+            while (actualCurrent != null && expectedCurrent != null)
+            {
+                Assert.True(expectedCurrent.Data == actualCurrent.Data);
+                actualCurrent = actualCurrent.Next;
+                expectedCurrent = expectedCurrent.Next;
+            }
+        }
+
+        [Fact]
+        public void RemoveDuplicateFromSortedList_RemoveDuplicates_WhenTheListHasOnlyOneElement()
+        {
+            var actualSingly = new Singly();
+            actualSingly.Add(99);
+
+            actualSingly.RemoveDuplicatesFromSortedList();
+
+            Assert.NotNull(actualSingly.Head);
+            Assert.NotNull(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+            Assert.False(actualSingly.IsEmpty);
+
+            Assert.True(actualSingly.Head.Equals(actualSingly.Tail));
+            Assert.True(actualSingly.Head.Data == actualSingly.Tail.Data);
+            Assert.True(1UL == actualSingly.Count);
+        }
+
+        [Fact]
+        public void RemoveDuplicatesFromSortedList_DoesNothing_WhenTheListIsEmpty()
+        {
+            var actualSingly = new Singly();
+
+            actualSingly.RemoveDuplicatesFromSortedList();
+
+            Assert.Null(actualSingly.Head);
+            Assert.Null(actualSingly.Tail);
+
+            Assert.False(actualSingly.IsNull);
+
+            Assert.True(actualSingly.IsEmpty);
+            Assert.True(0UL == actualSingly.Count);
+        }
         #endregion
     }
 }

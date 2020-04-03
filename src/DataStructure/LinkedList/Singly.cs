@@ -548,6 +548,9 @@ namespace Ds.LinkedList
             return decimalResult;
         }
 
+        /// <summary>
+        /// Sorts the list using merge sort.
+        /// </summary>
         public void Sort()
         {
             if (IsEmpty)
@@ -569,6 +572,35 @@ namespace Ds.LinkedList
                 current = current.Next;
             }
             Tail = current;
+        }
+
+        /// <summary>
+        /// Removes duplicates from a sored list.
+        /// NOTE: The list must be sorted before performing this operation.
+        /// </summary>
+        public void RemoveDuplicatesFromSortedList()
+        {
+            if (IsEmpty)
+                return;
+            if (Count == 1)
+                return;
+
+            var current = Head;
+            var next = Head.Next;
+            while (next != null)
+            {
+                if (current.Data != next.Data)
+                {
+                    current = next;
+                    next = next.Next;
+                    continue;
+                }
+                if (Tail.Equals(next) && Tail.Data == next.Data && Tail.Next == next.Next)
+                    Tail = current;
+                next = next.Next;
+                current.Next = next;
+                --Count;
+            }
         }
         #endregion
 
