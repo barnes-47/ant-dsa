@@ -74,5 +74,24 @@ namespace Ds.Test
             Assert_WhilePopping(expectedElements, actualStack);
             Assert_AfterPopping(actualStack);
         }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(-99)]
+        [InlineData(-99999999)]
+        [InlineData(10)]
+        [InlineData(90)]
+        [InlineData(9877889)]
+        public void DeleteAt_ThrowsArgumentOutOfRangeException_WhenIndexIsNegativeInt_Or_GreaterThanCountOfStack(
+            int fakeIndex)
+        {
+            var expectedEx = new ArgumentOutOfRangeException("index", fakeIndex, "Invalid index.");
+            var actualStack = new Stack(5);
+
+            var actualEx = Assert.Throws<ArgumentOutOfRangeException>(() => actualStack.DeleteAt(fakeIndex));
+
+            Assert.True(expectedEx.ParamName == actualEx.ParamName);
+            Assert.True(expectedEx.Message == actualEx.Message);
+        }
     }
 }
