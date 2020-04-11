@@ -4,17 +4,16 @@ namespace Ds
 {
     public class Stack
     {
-        private char[] _array;
-        private int _size;
+        private readonly char[] _array;
 
-        public int Count => _size;
-        public bool IsOverflow => _size == _array.Length - 1;
-        public bool IsUnderflow => _size == -1;
-        public bool HasSingleElement => _size == 0;
+        public int Count { get; private set; }
+        public bool IsOverflow => Count == _array.Length - 1;
+        public bool IsUnderflow => Count == -1;
+        public bool HasSingleElement => Count == 0;
 
         public Stack()
         {
-            _size = -1;
+            Count = -1;
             _array = Array.Empty<char>();
         }
 
@@ -23,7 +22,7 @@ namespace Ds
             if (capacity < 0)
                 throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Invalid capacity value.");
 
-            _size = -1;
+            Count = -1;
             _array = new char[capacity];
         }
 
@@ -35,32 +34,47 @@ namespace Ds
 
         public Stack(char[] array)
         {
-            _size = array.Length - 1;
+            Count = array.Length - 1;
             _array = new char[array.Length];
             Array.Copy(array, 0, _array, 0, _array.Length);
         }
 
         #region Basic Operations
+        /// <summary>
+        /// Pushes data on the top of the stack.
+        /// </summary>
+        /// <param name="data"></param>
         public void Push(char data)
         {
             if (IsOverflow)
                 return;
 
-            _array[++_size] = data;
+            _array[++Count] = data;
         }
 
-        public char Pop() => IsUnderflow ? (default) : _array[_size--];
+        /// <summary>
+        /// Gets the top element on the stack and decreases the Count by 1.
+        /// </summary>
+        /// <returns></returns>
+        public char Pop() => IsUnderflow ? (default) : _array[Count--];
 
-        public char Peek() => IsUnderflow ? (default) : _array[_size];
+        /// <summary>
+        /// Gets the top element on the stack. Count remains intact.
+        /// </summary>
+        /// <returns></returns>
+        public char Peek() => IsUnderflow ? (default) : _array[Count];
 
+        /// <summary>
+        /// Reverse the elements of the stack.
+        /// </summary>
         public void Reverse()
         {
             if (IsUnderflow)
                 return;
             if (HasSingleElement)
                 return;
-            var size = (_size & 1) == 1 ? _size / 2 : (_size / 2) - 1;
-            for (int i = 0, j = _size; i <= size && size < j; i++, j--)
+            var size = (Count & 1) == 1 ? Count / 2 : (Count / 2) - 1;
+            for (int i = 0, j = Count; i <= size && size < j; i++, j--)
             {
                 var temp = _array[i];
                 _array[i] = _array[j];
@@ -68,22 +82,29 @@ namespace Ds
             }
         }
 
+        /// <summary>
+        /// Deletes the element at the specified index.
+        /// </summary>
+        /// <param name="index">The integer index.</param>
         public void DeleteAt(int index)
         {
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index), index, "Invalid index.");
-            if (index > _size)
+            if (index > Count)
                 throw new ArgumentOutOfRangeException(nameof(index), index, "Invalid index.");
-            for (var i = index; i + 1 <= _size; ++i)
+            for (var i = index; i + 1 <= Count; ++i)
             {
                 _array[i] = _array[i + 1];
             }
-            --_size;
+            --Count;
         }
 
+        /// <summary>
+        /// Prints the stack on the console.
+        /// </summary>
         public void PrintToConsole()
         {
-            for (var i = 0; i <= _size; ++i)
+            for (var i = 0; i <= Count; ++i)
             {
                 Console.WriteLine(_array[i]);
             }
