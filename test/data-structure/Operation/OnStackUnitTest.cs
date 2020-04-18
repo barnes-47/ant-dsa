@@ -6,6 +6,11 @@ namespace Ds.Test.Operation
 {
     public class OnStackUnitTest
     {
+        #region Private Constants
+        private const string NullOrEmptyExpression = "Null or empty expression.";
+        private const string InvalidExpression = "Invalid expression.";
+        #endregion
+
         private void Assert_BeforePopping(char[] expected, char expectedTop, Stack actual)
         {
             Assert.False(actual.IsUnderflow);
@@ -29,6 +34,7 @@ namespace Ds.Test.Operation
             Assert.True(default(char) == actual.Peek());
         }
 
+        #region Other Operation on Stack
         [Theory]
         [InlineData("1")]
         [InlineData("12")]
@@ -102,5 +108,46 @@ namespace Ds.Test.Operation
             Assert_WhilePopping(expectedElement, actualOnStack.Stack);
             Assert_AfterPopping(actualOnStack.Stack);
         }
+        #endregion
+
+        #region Standard Problems based on Stack
+        [Theory]
+        [InlineData("", NullOrEmptyExpression)]
+        [InlineData("a+b*c+d", "abc*+d+")]
+        [InlineData("a*b+c+d", "ab*c+d+")]
+        [InlineData("(a+b)*(c+d)", "ab+cd+*")]
+        [InlineData("a/b+c*(d-e)", "ab/cde-*+")]
+        [InlineData("(a/(b+c))*d-e", "abc+/d*e-")]
+        public void InfixToPostfix_ConvertsAnInfixExpressionToPostfixExpression(
+            string infixExp
+            , string expectedExp)
+        {
+            var actualOnStack = new OnStack(infixExp.ToCharArray().Length);
+
+            var actualExp = actualOnStack.InfixToPostfix(infixExp);
+
+            Assert.True(expectedExp.Length == actualExp.Length);
+            Assert.True(expectedExp == actualExp);
+        }
+
+        [Theory]
+        [InlineData("", NullOrEmptyExpression)]
+        [InlineData("a+b*c+d", "+a+*bcd")]
+        [InlineData("a*b+c+d", "+*ab+cd")]
+        [InlineData("(a+b)*(c+d)", "*+ab+cd")]
+        //[InlineData("a/b+c*(d-e)", "ab/cde-*+")]
+        //[InlineData("(a/(b+c))*d-e", "abc+/d*e-")]
+        public void InfixToPrefix_ConvertsAnInfixExpressionToPrefixExpression(
+            string infixExp
+            , string expectedExp)
+        {
+            var actualOnStack = new OnStack(infixExp.ToCharArray().Length);
+
+            var actualExp = actualOnStack.InfixToPrefix(infixExp);
+
+            Assert.True(expectedExp.Length == actualExp.Length);
+            Assert.True(expectedExp == actualExp);
+        }
+        #endregion
     }
 }

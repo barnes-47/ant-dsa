@@ -8,7 +8,7 @@ namespace Ds
 
         public int Count { get; private set; }
         public bool IsOverflow => Count == _array.Length - 1;
-        public bool IsUnderflow => Count == -1;
+        public bool IsUnderflow => Count <= -1;
         public bool HasSingleElement => Count == 0;
 
         public Stack()
@@ -40,6 +40,11 @@ namespace Ds
         }
 
         #region Basic Operations
+        /// <summary>
+        /// Clears the stack by setting Count = -1.
+        /// </summary>
+        public void Clear() => Count = -1;
+
         /// <summary>
         /// Pushes data on the top of the stack.
         /// </summary>
