@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Ds.Helper;
+using System;
+//using System.Linq;
 using System.Text;
 
 namespace Ds
@@ -7,8 +9,11 @@ namespace Ds
     {
         static void Main(string[] args)
         {
-            ushort short11 = 1024;
-            DecimalToBinary(6);
+            var str = "Hello World!";
+            var array = str.ToCharArray();
+            array.Reverse();
+
+            Console.WriteLine(new string(array));
 
             Console.ReadKey();
         }
