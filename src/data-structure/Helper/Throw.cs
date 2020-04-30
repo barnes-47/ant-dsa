@@ -13,6 +13,9 @@ namespace Ds.Helper
         internal static void ArgumentNullException(string paramName)
             => throw new ArgumentNullException(paramName);
 
+        internal static void ArgumentOutOfRangeException(string message, Exception innerException)
+            => throw new ArgumentOutOfRangeException(message, innerException);
+
         internal static void ArgumentOutOfRangeException(string paramName, string message)
             => throw new ArgumentOutOfRangeException(paramName, message);
 

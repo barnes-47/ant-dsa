@@ -1,7 +1,9 @@
 ﻿using DsGeneric = Ds.Generic;
 using Ds.Operation;
+using Ds.Helper;
 using System.Collections.Generic;
 using Xunit;
+using System;
 
 namespace Ds.Test.Operation
 {
@@ -104,6 +106,71 @@ namespace Ds.Test.Operation
             actualOnStack.ReverseUsingExtraSpace();
 
             AssertTrueExpectedOnStackAndActualOnStack<string>(expectedOnStack, actualOnStack);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void InfixToPostfix_ThrowsArgumentNullException_WhenInfixExpressionIsNullOrEmpty(
+            string inputExp)
+        {
+            var expectedEx = new ArgumentNullException(nameof(inputExp));
+            var actualOnStack = new OnStack<char>();
+
+
+            var actualEx = Assert.Throws<ArgumentNullException>(() => actualOnStack.InfixToPostfix(inputExp));
+
+            Assert.True(expectedEx.ParamName == actualEx.ParamName);
+            Assert.True(expectedEx.Message == actualEx.Message);
+        }
+
+        [Theory]
+        [InlineData("abc")]
+        [InlineData("abcdef")]
+        [InlineData("abc def")]
+        public void InfixToPostfix_ThrowsArgumentNullException_WhenInfixExpressionDoestNotContainsAnyArithmeticOperator(
+            string inputExp)
+        {
+            var expectedEx = new ArgumentException(Message.OnStack.ArithmeticOperatorNotFound);
+            var actualOnStack = new OnStack<char>();
+
+            var actualEx = Assert.Throws<ArgumentException>(() => actualOnStack.InfixToPostfix(inputExp));
+
+            Assert.True(expectedEx.ParamName == actualEx.ParamName);
+            Assert.True(expectedEx.Message == actualEx.Message);
+        }
+
+        [Theory]
+        [InlineData("a+b*c+d", "abc*+d+")]
+        [InlineData("(a+b)*(c+d)", "ab+cd+*")]
+        [InlineData("((((a+b)*c)-d)/e)", "ab+c*d-e/")]
+        [InlineData("(((a+b)*c)/d+e*f/g)", "ab+c*d/ef*g/+")]        
+        [InlineData("k+l-m*n+(o+p)*w/u/v*t+q", "kl+mn*-op+w*u/v/t*+q+")]
+        public void InfixToPostfix_ConvertsAnInfixExpressionToPostfixExpression(
+            string inputExp
+            , string expectedExp)
+        {
+            var actualOnStack = new OnStack<char>();
+
+            var actualExp = actualOnStack.InfixToPostfix(inputExp);
+
+            Assert.True(expectedExp == actualExp);
+        }
+
+        [Theory]
+        [InlineData("a+b*c+d", "++a*bcd")]
+        [InlineData("(a+b)*(c+d)", "*+ab+cd")]
+        [InlineData("(((a+b)*c)/d+e*f/g)", "+/*+abcd/*efg")]
+        [InlineData("k+l-m*n+(o+p)*w/u/v*t+q", "++-+kl*mn*//*+opwuvtq")]
+        public void InfixToPrefix_ConvertsAnInfixExpressionToPrefixExpression(
+            string infixExp
+            , string expectedExp)
+        {
+            var actualOnStack = new OnStack<char>();
+
+            var actualExp = actualOnStack.InfixToPrefix(infixExp);
+
+            Assert.True(expectedExp == actualExp);
         }
     }
 }
