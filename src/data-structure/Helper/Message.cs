@@ -2,13 +2,22 @@
 {
     public static class Message
     {
+        public static class Common
+        {
+            public const string NonNegativeArrayIndex = "Array index must be non-negative.";
+            public const string ArrayIndexCannotGreaterThanArraySize = "Array index must not be greater than array size.";
+            public const string ArraySizeLess = "Array size must be greater than or equal to the length of the list. Array size is difference between array length and array index.";
+        }
+
+        public static class SinglyLinkedList
+        {
+            public const string Empty = "Singly list is empty.";
+        }
+
         public static class Stack
         {
             public const string Empty = "Stack is empty.";
-            public const string NonNegativeCapacity = "Capacity must be non-negative.";
-            public const string NonNegativeArrayIndex = "Array index must be non-negative.";
-            public const string ArrayIndexNotGreaterThanArraySize = "Array index must not be greater than array size.";
-            public const string ArraySizeLess = "The difference of array length and arrayIndex must not be less than Count";
+            public const string NonNegativeCapacity = "Capacity must be non-negative.";                        
         }
 
         public static class OnStack

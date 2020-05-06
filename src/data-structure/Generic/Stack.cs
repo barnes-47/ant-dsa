@@ -108,11 +108,11 @@ namespace Ds.Generic
             if (array == null)
                 Throw.ArgumentNullException(nameof(array));
             if (arrayIndex < 0)
-                Throw.ArgumentOutOfRangeException(nameof(arrayIndex), Message.Stack.NonNegativeArrayIndex);
+                Throw.ArgumentOutOfRangeException(nameof(arrayIndex), Message.Common.NonNegativeArrayIndex);
             if (arrayIndex > array.Length)
-                Throw.ArgumentOutOfRangeException(nameof(arrayIndex), Message.Stack.ArrayIndexNotGreaterThanArraySize);
+                Throw.ArgumentOutOfRangeException(nameof(arrayIndex), Message.Common.ArrayIndexCannotGreaterThanArraySize);
             if (Count > array.Length - arrayIndex)
-                Throw.ArgumentException(Message.Stack.ArraySizeLess);
+                Throw.ArgumentException(Message.Common.ArraySizeLess);
 
             Array.Copy(_array, 0, array, arrayIndex, Count);
             Array.Reverse(array, arrayIndex, Count);
@@ -220,7 +220,7 @@ namespace Ds.Generic
             private int _index;
             private T _current;
 
-            private bool IsFirstCall => _index == -2;
+            private bool IsFirstCall => _index <= -2;
             private bool IsEndOfEnumeration => _index == -1;
 
             internal Enumerator(Stack<T> stack)
