@@ -170,12 +170,15 @@ namespace Ds.Operation
             var hare = list.Head.Next;
             while (hare != null)
             {
-                if (hare.Next == null)
-                    break;
                 if (hare == tortoise)
                     return hare;
+
+                hare = hare.Next;
+                if (hare == null)
+                    break;
+                
                 tortoise = tortoise.Next;
-                hare = hare.Next.Next;
+                hare = hare.Next;
             }
 
             return null;

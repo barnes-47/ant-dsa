@@ -263,7 +263,7 @@ namespace Ds.Generic.LinkedList
 
             public void Dispose()
             {
-
+                _index = 0;
             }
 
             public bool MoveNext()

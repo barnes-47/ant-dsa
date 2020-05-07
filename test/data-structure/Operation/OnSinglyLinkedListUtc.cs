@@ -112,5 +112,70 @@ namespace Ds.Test.Operation
 
             Assert.False(actual);
         }
+
+        [Theory]
+        [InlineData("", 0, 0)]
+        [InlineData("1", 1, 1)]
+        [InlineData("1,1,1", 1, 3)]
+        [InlineData("1,2,3,4,5,6,7,8,9,10,11", 5, 7)]
+        [InlineData("1,2,3,4,5,6,7,8,9,10,11", 4, 8)]
+        [InlineData("1,2,3,4,5,6,7,8,9,10,11,12", 9, 4)]
+        [InlineData("1,2,3,4,5,6,7,8,9,10,11,12", 8, 5)]
+        [InlineData("1,2,3,4,5,6,7,8,9,10,11,12", -1, 0)]
+        public void LoopLength_ReturnsLengthOfLoop(
+            string strList
+            , int startOfLoop
+            , int expectedLoopLength)
+        {
+            var singly = new Singly<int>(ConvertToInts(strList));
+            var expected = GetExpected(singly);
+            singly.SetupLoop(startOfLoop);
+
+            var actualLoopLength = singly.LoopLength();
+
+            Assert.True(expectedLoopLength == actualLoopLength);
+            AssertHeadTailAndCount(expected, singly);
+        }
+
+        [Theory]
+        [InlineData("1", 1)]
+        [InlineData("1,1,1", 1)]
+        [InlineData("1,2,3,4,5,6,7,8,9,10,11", 5)]
+        [InlineData("1,2,3,4,5,6,7,8,9,10,11", 4)]
+        [InlineData("1,2,3,4,5,6,7,8,9,10,11,12", 9)]
+        [InlineData("1,2,3,4,5,6,7,8,9,10,11,12", 8)]
+        public void LoopStartNode_ReturnsStartNodeOfLoop_WhenLoopExists(
+            string strList
+            , int startOfLoop)
+        {
+            var singly = new Singly<int>(ConvertToInts(strList));
+            var expected = GetExpected(singly);
+            var expectedNode = singly.GetNode(startOfLoop);
+            singly.SetupLoop(startOfLoop);
+
+            var actualNode = singly.LoopStartNode();
+
+            Assert.Equal(expectedNode, actualNode);
+            Assert.True(expectedNode.Item == actualNode.Item);
+            AssertHeadTailAndCount(expected, singly);
+        }
+
+        [Theory]
+        [InlineData("", 0)]
+        [InlineData("1,2,3,4,5,6,7,8,9,10,11,12", -1)]
+        public void LoopStartNode_ReturnsStartNodeOfLoop_WhenLoopDoesNotExists(
+            string strList
+            , int startOfLoop)
+        {
+            var singly = new Singly<int>(ConvertToInts(strList));
+            var expected = GetExpected(singly);
+            var expectedNode = singly.GetNode(startOfLoop);
+            singly.SetupLoop(startOfLoop);
+
+            var actualNode = singly.LoopStartNode();
+
+            Assert.Equal(expectedNode, actualNode);
+            AssertHeadTailAndCount(expected, singly);
+        }
     }
 }
