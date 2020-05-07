@@ -6,11 +6,15 @@ namespace Ds.Generic.LinkedList
 {
     public sealed class SinglyNode<T>
     {
+        #region Private Variables
+        private EqualityComparer<T> _comparer;
+        #endregion
         public T Item { get; }
         public SinglyNode<T> Next { get; internal set; }
 
         public SinglyNode(T item)
         {
+            _comparer = EqualityComparer<T>.Default;
             Item = item;
             Next = null;
         }
@@ -21,11 +25,30 @@ namespace Ds.Generic.LinkedList
 
     public class Singly<T> : ICollection<T>
     {
-        public SinglyNode<T> Head { get; private set; }
-        public SinglyNode<T> Tail { get; private set; }
-        public int Count { get; private set; }
+        #region Public Properties
+        public SinglyNode<T> Head { get; internal set; }
+        public SinglyNode<T> Tail { get; internal set; }
+        public int Count { get; internal set; }
         public bool IsEmpty => Head == null && Tail == null && Count == 0;
         public bool IsReadOnly => false;
+        #endregion
+
+        #region Ctors
+        public Singly()
+        {
+
+        }
+        public Singly(IEnumerable<T> collection)
+        {
+            if (collection == null)
+                Throw.ArgumentNullException(nameof(collection));
+
+            foreach (var item in collection)
+            {
+                AddLast(item);
+            }
+        }
+        #endregion
 
         public void Add(T item)
             => AddLast(item);
