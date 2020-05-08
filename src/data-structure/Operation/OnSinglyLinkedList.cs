@@ -155,6 +155,24 @@ namespace Ds.Operation
 
             return list.InternalMiddleNode();
         }
+        public static SinglyNode<T> NthNode<T>(this Singly<T> list, int nTh)
+        {
+            InternalValidationForListAndIndex(list, nTh);
+
+            var current = list.Head;
+            while(--nTh != 0)
+            {
+                current = current.Next;
+            }
+
+            return current;
+        }
+        public static SinglyNode<T> NthNodeFromEnd<T>(this Singly<T> list, int nTh)
+        {
+            nTh = list.Count + 1 - nTh;
+
+            return list.NthNode(nTh);
+        }
         public static void Reverse<T>(this Singly<T> list)
         {
             if (list.IsEmpty)
@@ -296,6 +314,15 @@ namespace Ds.Operation
             }
 
             return node;
+        }
+        private static void InternalValidationForListAndIndex<T>(Singly<T> list, int nTh)
+        {
+            if (list == null)
+                Throw.ArgumentNullException(nameof(list));
+            if (nTh < 1)
+                Throw.ArgumentOutOfRangeException(nameof(nTh), Message.OnSinglyLinkedList.NthMustBePositiveNonZero);
+            if (nTh > list.Count)
+                Throw.ArgumentOutOfRangeException(nameof(nTh), Message.OnSinglyLinkedList.NthCannotBeGreaterThanListCount);
         }
         #endregion
     }

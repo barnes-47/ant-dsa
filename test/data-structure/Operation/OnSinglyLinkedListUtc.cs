@@ -335,5 +335,40 @@ namespace Ds.Test.Operation
 
             ClearSingly(actualSingly, expectedSingly);
         }
+
+        [Fact]
+        public void MiddleNode_ReturnsNull_WhenListIsEmpty()
+        {
+            var singly = new Singly<int>();
+
+            var actual = singly.MiddleNode();
+
+            Assert.Null(actual);
+            Assert.True(singly.IsEmpty);
+        }
+
+        [Theory]
+        [InlineData("1", 1)]
+        [InlineData("1,2", 1)]
+        [InlineData("1,2,3", 2)]
+        [InlineData("1,2,3,4", 2)]
+        [InlineData("1,2,3,4,5", 3)]
+        [InlineData("1,2,3,4,5,6", 3)]
+        [InlineData("1,2,3,4,5,6,7", 4)]
+        [InlineData("1,2,3,4,5,6,7,8", 4)]
+        [InlineData("1,2,3,4,5,6,7,8,9", 5)]
+        [InlineData("1,2,3,4,5,6,7,8,9,10", 5)]
+        public void MiddleNode_ReturnsTheMiddleNode_WhenListIsNotEmpty(
+            string actualStr
+            , int expectedItem)
+        {
+            var singly = new Singly<int>(actualStr.ConvertToInts());
+            var expected = singly.GetExpected();
+
+            var actual = singly.MiddleNode();
+
+            Assert.True(expectedItem == actual.Item);
+            AssertHeadTailReferencesAndCount(expected, singly);
+        }
     }
 }

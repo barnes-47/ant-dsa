@@ -20,6 +20,12 @@
             public const string NonNegativeCapacity = "Capacity must be non-negative.";                        
         }
 
+        public static class OnSinglyLinkedList
+        {
+            public const string NthMustBePositiveNonZero = "Nth value must be a positive non-zero integer.";
+            public const string NthCannotBeGreaterThanListCount = "Nth cannot be greater than list count.";
+        }
+
         public static class OnStack
         {
             public const string InvalidExpression = "Invalid expression.";
