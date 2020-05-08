@@ -7,6 +7,9 @@ namespace Ds.Helper
         internal static void InvalidOperationException(string message)
             => throw new InvalidOperationException(message);
 
+        internal static void InvalidOperationException(string message, Exception innerEx)
+            => throw new InvalidOperationException(message, innerEx);
+
         internal static void ArgumentException(string message)
             => throw new ArgumentException(message);
 

@@ -1,6 +1,7 @@
 ﻿using Ds.Generic.LinkedList;
 using Ds.Helper;
 using System.Collections.Generic;
+using System.Diagnostics;
 using DsGeneric = Ds.Generic;
 
 namespace Ds.Operation
@@ -111,21 +112,41 @@ namespace Ds.Operation
 
             return current;
         }
-        public static void MergeSort(this Singly<int> list)
+        public static void MergeSort(this Singly<int> unsortedList)
         {
-            if (list.Count < 2)
+            if (unsortedList.Count < 2)
                 return;
 
-            list.Head = list.Head.InternalMergeSort();
+            unsortedList.Head = unsortedList.Head.InternalMergeSort();
+            unsortedList.InternalSetupSinglyAfterMergeSort();
+        }
+        /// <summary>
+        /// Merges 2 sorted lists.
+        /// NOTE: Both lists must be sorted in order for this method to work correctly.
+        /// </summary>
+        /// <param name="sortedList1">The sorted list one.</param>
+        /// <param name="sortedList2">The sorted list two.s</param>
+        /// <returns>A new list which is a combination of both the sorted lists.</returns>
+        public static Singly<int> MergeSort(this Singly<int> sortedList1, Singly<int> sortedList2)
+        {
+            if (sortedList1.IsEmpty && sortedList2.IsEmpty)
+                return null;
+            if (sortedList1.IsEmpty && !sortedList2.IsEmpty)
+                return sortedList2;
+            if (!sortedList1.IsEmpty && sortedList2.IsEmpty)
+                return sortedList1;
 
-            var current = list.Head;
-            list.Count = 1;
-            while (current.Next != null)
+            var singly = new Singly<int>
             {
-                current = current.Next;
-                ++list.Count;
-            }
-            list.Tail = current;
+                Count = sortedList1.Count + sortedList2.Count,
+                Head = InternalMerge(sortedList1.Head, sortedList2.Head)
+            };
+            if (sortedList1.Tail.Item > sortedList2.Tail.Item)
+                singly.Tail = sortedList1.Tail;
+            else
+                singly.Tail = sortedList2.Tail;
+
+            return singly;
         }
         public static SinglyNode<T> MiddleNode<T>(this Singly<T> list)
         {
@@ -241,6 +262,17 @@ namespace Ds.Operation
 
             return tortoise;
         }
+        private static void InternalSetupSinglyAfterMergeSort(this Singly<int> list)
+        {
+            var current = list.Head;
+            list.Count = 1;
+            while(current.Next != null)
+            {
+                current = current.Next;
+                ++list.Count;
+            }
+            list.Tail = current;
+        }
         #endregion
 
         #region Private Methods
@@ -260,7 +292,7 @@ namespace Ds.Operation
             else
             {
                 node = left;
-                node.Next = InternalMerge(right, left.Next);
+                node.Next = InternalMerge(left.Next, right);
             }
 
             return node;
