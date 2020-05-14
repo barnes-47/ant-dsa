@@ -4,9 +4,15 @@
     {
         public static class Common
         {
+            public const string NonNegativeCapacity = "Capacity must be non-negative.";
             public const string NonNegativeArrayIndex = "Array index must be non-negative.";
             public const string ArrayIndexCannotGreaterThanArraySize = "Array index must not be greater than array size.";
             public const string ArraySizeLess = "Array size must be greater than or equal to the length of the list. Array size is difference between array length and array index.";
+        }
+
+        public static class QueueUsingArray
+        {
+            public const string Empty = "Queue is empty.";
         }
 
         public static class SinglyLinkedList
