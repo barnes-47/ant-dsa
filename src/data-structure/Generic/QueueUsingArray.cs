@@ -17,6 +17,7 @@ namespace Ds.Generic
         #endregion
 
         #region Private Variables
+        private object _syncRoot;
         private T[] _array;
         private int _head;
         private int _tail;
@@ -97,7 +98,15 @@ namespace Ds.Generic
         /// Gets an object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection" />.
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        public object SyncRoot => throw new NotImplementedException();
+        public object SyncRoot
+        {
+            get
+            {
+                if (_syncRoot == null)
+                    System.Threading.Interlocked.CompareExchange<object>(ref _syncRoot, new object(), null);
+                return _syncRoot;
+            }
+        }
         #endregion
 
         #region Public Methods        
