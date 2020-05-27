@@ -7,11 +7,15 @@ namespace HackerRank
     {
         static void Main(string[] args)
         {
-            MinimumMoves();
+            //MinimumMoves();
             //var a = default(int);
             //var b = default(int);
+            //int? a = null;
+            //var con = a is int?;
+            //var a = "aaaa" < "cc";
 
-            //Console.ReadKey();
+
+            Console.ReadKey();
         }
 
         static void MinimumMoves()

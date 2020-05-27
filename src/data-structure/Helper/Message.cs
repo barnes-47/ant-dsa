@@ -42,6 +42,11 @@
             public const string NumberOfPopOpAreMoreThanElements = "Cannot perform this operation. Number of Pop operations are more than the elements in stack.";
         }
 
+        public static class OnBinarySearchTree
+        {
+            public const string RootIsNull = "Root is null.";
+        }
+
         public static class Enumerator
         {
             public const string OperationNotStarted = "Operation not yet started.";
