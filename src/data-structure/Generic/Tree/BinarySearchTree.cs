@@ -1,5 +1,7 @@
 ﻿using Ds.Helper;
+using Ds.LinkedList;
 using System;
+using System.Collections.Generic;
 
 namespace Ds.Generic.Tree
 {
@@ -8,7 +10,7 @@ namespace Ds.Generic.Tree
     {
         #region Public Properties
         public bool IsLeaf => Left == null && Right == null;
-        public T Item { get; private set; }
+        public T Item { get; internal set; }
         public BinarySearchTreeNode<T> Parent { get; internal set; }
         public BinarySearchTreeNode<T> Left { get; internal set; }
         public BinarySearchTreeNode<T> Right { get; internal set; }
@@ -42,6 +44,7 @@ namespace Ds.Generic.Tree
             Parent = null;
             Left = null;
             Right = null;
+            Item = default;
         }
         #endregion
 
@@ -76,8 +79,8 @@ namespace Ds.Generic.Tree
     public class BinarySearchTree<T>
         where T : IComparable<T>
     {
-        #region Private Properties
-
+        #region Private Variables
+        private IComparer<T> _comparer;
         #endregion
 
         #region Public Properties
@@ -106,6 +109,34 @@ namespace Ds.Generic.Tree
         public bool IsEmpty => Count < 1 && Root == null;
         #endregion
 
+        #region Ctors
+        public BinarySearchTree()
+        {
+            _comparer = Comparer<T>.Default;
+        }
+        public BinarySearchTree(IComparer<T> comparer)
+        {
+            _comparer = comparer ?? Comparer<T>.Default;
+        }
+        public BinarySearchTree(IEnumerable<T> collection)
+            : this(collection, Comparer<T>.Default)
+        {
+
+        }
+        public BinarySearchTree(IEnumerable<T> collection, IComparer<T> comparer)
+            : this(comparer)
+        {
+            if (collection == null)
+                Throw.ArgumentNullException(nameof(collection));
+
+            using var en = collection.GetEnumerator();
+            while (en.MoveNext())
+            {
+                Add(en.Current);
+            }
+        }
+        #endregion
+
         public int CompareTo(T other)
         {
             return CompareTo(other);
@@ -117,41 +148,89 @@ namespace Ds.Generic.Tree
         /// <param name="item">The item.</param>
         public void Add(T item)
         {
-            ++Count;
             if (IsEmpty)
             {
                 Root = AddParent(item);
+                ++Count;
+
                 return;
             }
 
             AddTo(item, Root);
+            ++Count;
         }
 
         /// <summary>Removes the specified item.</summary>
         /// <param name="item">The item.</param>
-        public void Remove(T item)
+        public void Delete(T item)
         {
-            var node = Find(item);
-            if (node == null)
+            var nodeToBeDeleted = Find(item);
+            if (nodeToBeDeleted == null)
                 return;
 
-            --Count;
-            // if it is leaf node
-            if (node.IsLeaf)
+            if (nodeToBeDeleted.IsLeaf)     // deletes a leaf-node.
             {
-                if (node.Parent.Left == node)
-                    node.Parent.Left = null;
-                if (node.Parent.Right == node)
-                    node.Parent.Right = null;
+                if (nodeToBeDeleted.Parent.Left == nodeToBeDeleted)
+                    nodeToBeDeleted.Parent.Left = null;
+                if (nodeToBeDeleted.Parent.Right == nodeToBeDeleted)
+                    nodeToBeDeleted.Parent.Right = null;
+
+                nodeToBeDeleted.Clear();
+                --Count;
 
                 return;
             }
-            // if node has one child
+            if (nodeToBeDeleted.Left != null && nodeToBeDeleted.Right == null)  // deletes a node that has only left child.
+            {
+                if (nodeToBeDeleted.Parent.Left == nodeToBeDeleted)
+                    nodeToBeDeleted.Parent.Left = nodeToBeDeleted.Left;
+                else
+                    nodeToBeDeleted.Parent.Right = nodeToBeDeleted.Left;
 
-            // if node has two children
-            // find a minimum value in the right subtree
-            // replace value of the node to be removed with found minimum. Now right subtree contains a duplicate.
-            // apply remove to the right subtree to remove the duplicate.
+                nodeToBeDeleted.Left.Parent = nodeToBeDeleted.Parent;
+                nodeToBeDeleted.Clear();
+                --Count;
+
+                return;
+            }
+            if (nodeToBeDeleted.Left == null && nodeToBeDeleted.Right != null)  // deletes a node that has only right child.
+            {
+                if (nodeToBeDeleted.Parent.Left == nodeToBeDeleted)
+                    nodeToBeDeleted.Parent.Left = nodeToBeDeleted.Right;
+                else
+                    nodeToBeDeleted.Parent.Right = nodeToBeDeleted.Right;
+
+                nodeToBeDeleted.Right.Parent = nodeToBeDeleted.Parent;
+                nodeToBeDeleted.Clear();
+                --Count;
+
+                return;
+            }
+
+            // deletes a node that has 2 children (including root).
+            var successor = InOrderSuccessor(nodeToBeDeleted);  // gets the in-order successor of the node to be deleted.
+            if (successor == null)
+                return;
+
+            nodeToBeDeleted.Item = successor.Item;
+            if (successor.Right == null)
+            {
+                if (successor.Parent.Left == successor)
+                    successor.Parent.Left = null;
+                else
+                    successor.Parent.Right = null;
+            }
+            else
+            {
+                if (successor.Parent.Left == successor)
+                    successor.Parent.Left = successor.Right;
+                else
+                    successor.Parent.Right = successor.Right;
+                successor.Right.Parent = successor.Parent;
+            }
+
+            successor.Clear();
+            --Count;
         }
 
         /// <summary>Determines whether this instance contains the object.</summary>
@@ -226,7 +305,7 @@ namespace Ds.Generic.Tree
                 return node.Parent;
 
             var predecessor = node.Parent.Left;
-            while(predecessor.Right != null || predecessor.Left != null)
+            while (predecessor.Right != null || predecessor.Left != null)
             {
                 if (predecessor.Right != null)
                 {
@@ -256,7 +335,7 @@ namespace Ds.Generic.Tree
                 return node.Right;
 
             var successor = node.Parent;
-            while(successor != null)
+            while (successor != null)
             {
                 if (successor.Right != null && node == successor.Left)
                     return successor.Right;
@@ -383,28 +462,6 @@ namespace Ds.Generic.Tree
             InOrderTreeWalk(action, node.Left);
             action(node.Item);
             InOrderTreeWalk(action, node.Right);
-        }
-
-        /// <summary>Gets the node with the minimum value.</summary>
-        /// <returns></returns>
-        private BinarySearchTreeNode<T> NodeWithMinimumValue()
-        {
-            var current = Root;
-            while (current.Left != null)
-            { current = current.Left; }
-
-            return current;
-        }
-
-        /// <summary>Gets the node with the maximum value.</summary>
-        /// <returns></returns>
-        private BinarySearchTreeNode<T> NodeWithMaximumValue()
-        {
-            var current = Root;
-            while (current.Right != null)
-            { current = current.Right; }
-
-            return current;
         }
 
         /// <summary>Implements the Post-Order tree walk.</summary>
