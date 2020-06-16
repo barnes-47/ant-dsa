@@ -29,5 +29,26 @@ namespace Ds.Operation
                 current = current.Right;
             }
         }
+
+        public static bool IsBst(BinarySearchTreeNode<int> node)
+        {
+            if (!IsValidBstNode(node))
+                return false;
+            return IsBst(node.Left) && IsBst(node.Right);
+        }
+
+        public static bool IsValidBstNode(BinarySearchTreeNode<int> node)
+        {
+            if (node == null)
+                return true;
+            if (node.Left == null && node.Right == null)
+                return true;
+            if (node.Left != null && node.Left.Item > node.Item)
+                return false;
+            if (node.Right != null && node.Right.Item < node.Item)
+                return false;
+
+            return true;
+        }
     }
 }
