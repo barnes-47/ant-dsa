@@ -19,8 +19,7 @@ namespace Algo.Lists.SearchAlgorithms
         public static SearchResult BinarySearch(this IList<int> elements, int item)
         {
             var result = new SearchResult();
-            var sw = new Stopwatch();
-            sw.Start();
+            var sw = Stopwatch.StartNew();
 
             if (!elements.Any())    //When the list is empty.
             {
@@ -110,8 +109,7 @@ namespace Algo.Lists.SearchAlgorithms
         public static SearchResult JumpinarySearch(this IList<int> elements, int item)
         {
             var result = new SearchResult();
-            var sw = new Stopwatch();
-            sw.Start();
+            var sw = Stopwatch.StartNew();
 
             if (!elements.Any())    //When the list is empty.
             {
@@ -184,8 +182,7 @@ namespace Algo.Lists.SearchAlgorithms
         public static SearchResult JumpSearch(this IList<int> elements, int item)
         {
             var result = new SearchResult();
-            var sw = new Stopwatch();
-            sw.Start();
+            var sw = Stopwatch.StartNew();
 
             if (!elements.Any())    //When the list is empty.
             {
@@ -215,7 +212,7 @@ namespace Algo.Lists.SearchAlgorithms
             var blockStart = 0;
             var blockEnd = blockSize - 1;
             var end = elements.Count - 1;
-            while((blockStart <= end) && (item > elements[blockEnd]))
+            while ((blockStart <= end) && (item > elements[blockEnd]))
             {
                 blockStart += blockSize;
                 blockEnd += blockSize;
@@ -224,7 +221,7 @@ namespace Algo.Lists.SearchAlgorithms
             }
 
             //Then perform linear search in the block.
-            while(blockStart <= blockEnd)
+            while (blockStart <= blockEnd)
             {
                 if (elements[blockStart] == item)
                 {
@@ -251,8 +248,7 @@ namespace Algo.Lists.SearchAlgorithms
         public static SearchResult LinearSearch(this IList<int> elements, int item)
         {
             var result = new SearchResult();
-            var sw = new Stopwatch();
-            sw.Start();
+            var sw = Stopwatch.StartNew();
 
             for (var i = 0; i < elements.Count; ++i)
             {
