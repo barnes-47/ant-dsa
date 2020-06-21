@@ -66,5 +66,25 @@
                 Assert.True(expected[i] == actual[i]);
             }
         }
+
+        [Theory]
+        [InlineData("5 4 3 2 1")]
+        [InlineData("5 3 2 4 1 6")]
+        [InlineData("4 5 3 2 1")]
+        [InlineData("3 4 5 2 1")]
+        [InlineData("2 3 4 5 1")]
+        [InlineData("1 2 3 4 5")]
+        public void QuickSort_SortsAnUnsortedList(string str)
+        {
+            var actual = Array.ConvertAll(str.Split(' '), int.Parse).ToList();
+            var expected = new List<int> { 1, 2, 3, 4, 5 };
+
+            actual.QuickSort();
+
+            for (var i = 0; i < expected.Count; ++i)
+            {
+                Assert.True(expected[i] == actual[i]);
+            }
+        }
     }
 }

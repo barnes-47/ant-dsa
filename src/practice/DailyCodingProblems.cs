@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Practice
 {
-    public class Problem
+    public class DailyCodingProblems
     {
         #region Public Methods
         /// <summary>
@@ -56,6 +56,18 @@ namespace Practice
             #region Follow-up
 
             #endregion
+        }
+
+        /// <summary>
+        /// This problem was asked by Google.
+        /// 
+        /// Given the root to a binary tree, implement serialize(root), which serializes the tree into a string,
+        /// and deserialize(s), which deserializes the string back into the tree.
+        /// </summary>
+        /// <returns></returns>
+        public string Serialize()
+        {
+            return "";
         }
         #endregion
 

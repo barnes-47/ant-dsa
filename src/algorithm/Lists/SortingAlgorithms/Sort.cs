@@ -103,12 +103,46 @@
             return result;
         }
 
+        /// <summary>
+        /// Merge sort algorithm.
+        /// Time complexity:    O(n (log n))
+        /// Space complexity:   O(n) for arrays and O(1) for linked lists.
+        /// 
+        /// In worst case, MergeSort does about 39% fewer comparision than QuickSort does in the average case.
+        /// It is often the best choice for sorting a linked list.
+        /// Linux kernel uses MergeSort for its linked lists.
+        /// </summary>
+        /// <param name="elements">The elements.</param>
+        /// <returns></returns>
         public static SortResult MergeSort(this IList<int> elements)
         {
             var result = new SortResult();
             var sw = Stopwatch.StartNew();
 
-            InternalSort(elements, 0, elements.Count - 1);
+            MergeSort_Sort(elements, 0, elements.Count - 1);
+
+            sw.Stop();
+            result.Ticks = sw.ElapsedTicks;
+            result.Elements = elements;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Quick sort algorithm.
+        /// Time complexity:    O(n (log n)) for best and average case. O(n*n) for worst case.
+        /// Space complexity:   O(log n)
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="elements">The elements.</param>
+        /// <returns></returns>
+        public static SortResult QuickSort(this IList<int> elements)
+        {
+            var result = new SortResult();
+            var sw = Stopwatch.StartNew();
+
+            QuickSort_Sort(elements, 0, elements.Count - 1);
 
             sw.Stop();
             result.Ticks = sw.ElapsedTicks;
@@ -118,13 +152,14 @@
         }
 
         #region Private Methods
-        private static void InternalListCopy(IList<int> actual, IList<int> mirror)
+        private static void ListCopy(IList<int> actual, IList<int> mirror)
         {
             var i = -1;
             while (++i < actual.Count)
                 mirror.Add(actual[i]);
         }
-        private static void InternalMerge(IList<int> elements, int begin, int middle, int end)
+
+        private static void MergeSort_Merge(IList<int> elements, int begin, int middle, int end)
         {
             //Create 2 lists
             var listX = new List<int>();
@@ -153,15 +188,47 @@
             while (iY < listY.Count)
                 elements[iElement++] = listY[iY++];
         }
-        private static void InternalSort(IList<int> elements, int begin, int end)
+        private static void MergeSort_Sort(IList<int> elements, int begin, int end)
         {
             if (end <= begin)
                 return;
 
             var middle = (end + begin) / 2;
-            InternalSort(elements, begin, middle);
-            InternalSort(elements, middle + 1, end);
-            InternalMerge(elements, begin, middle, end);
+            MergeSort_Sort(elements, begin, middle);
+            MergeSort_Sort(elements, middle + 1, end);
+            MergeSort_Merge(elements, begin, middle, end);
+        }
+        private static int QuickSort_Partition(IList<int> elements, int begin, int end)
+        {
+            var pivot = elements[(begin + end) / 2];
+            var i = begin;
+            var j = end;
+            while (true)
+            {
+                while (elements[i] < pivot)
+                    ++i;
+                while (elements[j] > pivot)
+                    --j;
+                if (i >= j)
+                    return j;
+
+                //swap elements[i] with elements[j];
+                elements[i] = elements[i] + elements[j];
+                elements[j] = elements[i] - elements[j];
+                elements[i] = elements[i] - elements[j];
+
+                ++i;
+                --j;
+            }
+        }
+        private static void QuickSort_Sort(IList<int> elements, int begin, int end)
+        {
+            if (begin >= end)
+                return;
+
+            var partitionBorder = QuickSort_Partition(elements, begin, end);
+            QuickSort_Sort(elements, begin, partitionBorder);
+            QuickSort_Sort(elements, partitionBorder + 1, end);
         }
         #endregion
     }
