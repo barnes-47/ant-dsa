@@ -9,4 +9,8 @@
     <Folder Include="Algo\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\common\Common.csproj" />
+  </ItemGroup>
+
 </Project>

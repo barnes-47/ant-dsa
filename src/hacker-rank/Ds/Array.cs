@@ -1,11 +1,15 @@
 ﻿namespace HackerRank.Ds
 {
+    using Common;
+
     public class Array
     {
         public T[] Reverse<T>(T[] array)
         {
             if (array == null)
-                Throw
+                Throw.ArgumentNullException(nameof(array));
+            if (array.Length <= 0)
+                return array;
 
             var length = array.Length % 2 == 0 ? array.Length / 2 : (array.Length - 1) / 2;
             T temp;
