@@ -1,12 +1,10 @@
-﻿using Ds.Generic.Tree;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using static Ds.Helper.Constant;
-
-namespace Ds.Helper
+﻿namespace Ds.Helper
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using static Ds.Helper.Constant;
+
     public static class Extensions
     {
 

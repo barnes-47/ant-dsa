@@ -1,10 +1,9 @@
-﻿using Ds.Helper;
-using Ds.LinkedList;
-using System;
-using System.Collections.Generic;
-
-namespace Ds.Generic.Tree
+﻿namespace Ds.Generic.Tree
 {
+    using Ds.Helper;
+    using System;
+    using System.Collections.Generic;
+
     public class BinarySearchTreeNode<T>
         where T : IComparable<T>
     {

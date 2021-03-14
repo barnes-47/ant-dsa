@@ -1,11 +1,10 @@
-﻿using Ds.Generic.LinkedList;
-using Ds.Helper;
-using System.Collections.Generic;
-using System.Diagnostics;
-using DsGeneric = Ds.Generic;
-
-namespace Ds.Operation
+﻿namespace Ds.Operation
 {
+    using Ds.Generic.LinkedList;
+    using Ds.Helper;
+    using System.Collections.Generic;
+    using DsGeneric = Generic;
+
     public static class OnSinglyLinkedList
     {
         #region Internal Extension Validations

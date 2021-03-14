@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Practice
+﻿namespace Practice
 {
+    using System.Collections.Generic;
+
     public class MixedProblems
     {
         #region Public Methods

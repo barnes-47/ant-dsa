@@ -1,9 +1,9 @@
-﻿using Algo.Lists.SearchAlgorithms;
-using System.Collections.Generic;
-using Xunit;
-
-namespace Algo.Test.Lists
+﻿namespace Algo.Test.Lists
 {
+    using Algo.Lists.SearchAlgorithms;
+    using System.Collections.Generic;
+    using Xunit;
+
     public class SearchTests
     {
         /// <summary>

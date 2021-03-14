@@ -1,11 +1,11 @@
-﻿using Algo.Lists.SearchAlgorithms.Models;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-
-namespace Algo.Lists.SearchAlgorithms
+﻿namespace Algo.Lists.SearchAlgorithms
 {
+    using Algo.Lists.SearchAlgorithms.Models;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+
     public static class Search
     {
         /// <summary>

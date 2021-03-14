@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ds.LinkedList
+﻿namespace Ds.LinkedList
 {
+    using System;
+    using System.Collections.Generic;
+
     public class Node
     {
         public long Data { get; }

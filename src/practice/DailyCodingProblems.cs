@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Practice
+﻿namespace Practice
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class DailyCodingProblems
     {
         #region Public Methods

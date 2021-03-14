@@ -1,13 +1,11 @@
-﻿using Ds.Generic.LinkedList;
-using Ds.Operation;
-using System.Linq;
-using Xunit;
-using Ds.Helper;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-
-namespace Ds.Test.Operation
+﻿namespace Ds.Test.Operation
 {
+    using Ds.Generic.LinkedList;
+    using Ds.Operation;
+    using Xunit;
+    using Ds.Helper;
+    using System.Collections.Generic;
+
     internal class Expected<T>
     {
         internal SinglyNode<T> Head { get; set; }

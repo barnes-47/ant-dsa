@@ -1,10 +1,10 @@
-﻿using Ds.Helper;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace Ds.Generic
+﻿namespace Ds.Generic
 {
+    using Ds.Helper;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
     public class QueueUsingArray<T> : IEnumerable<T>, ICollection
     {
         #region Private Constants

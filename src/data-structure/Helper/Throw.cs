@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Ds.Helper
+﻿namespace Ds.Helper
 {
+    using System;
+
     internal static class Throw
     {
         #region Exception: Invalid Operation

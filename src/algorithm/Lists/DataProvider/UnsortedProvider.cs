@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Algo.Lists.DataProvider
+﻿namespace Algo.Lists.DataProvider
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class UnsortedProvider
     {
         public int Avg { get; }

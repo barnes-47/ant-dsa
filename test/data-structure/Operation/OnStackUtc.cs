@@ -1,12 +1,12 @@
-﻿using DsGeneric = Ds.Generic;
-using Ds.Operation;
-using Ds.Helper;
-using System.Collections.Generic;
-using Xunit;
-using System;
-
-namespace Ds.Test.Operation
+﻿namespace Ds.Test.Operation
 {
+    using DsGeneric = Ds.Generic;
+    using Ds.Operation;
+    using Ds.Helper;
+    using System.Collections.Generic;
+    using Xunit;
+    using System;
+
     public class OnStackUtc
     {
         #region Private Assert Methods

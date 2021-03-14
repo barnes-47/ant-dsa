@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Xunit;
-
-namespace Practice.Test
+﻿namespace Practice.Test
 {
+    using System.Collections.Generic;
+    using Xunit;
+
     public class DailyCodingProblemsTests
     {
         [Fact]

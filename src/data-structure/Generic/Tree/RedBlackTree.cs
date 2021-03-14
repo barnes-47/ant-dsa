@@ -41,12 +41,11 @@
  * 3. Several set operations such as Union, Intersection and Set difference have been defined on RB-Tree.
  */
 
-using Ds.Helper;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Ds.Generic.Tree
 {
+    using Ds.Helper;
+    using System.Collections.Generic;
+
     //public static class RedBlackTreeExtension
     //{
     //    /// <summary>Determines whether parent of the specified node is a left child.</summary>

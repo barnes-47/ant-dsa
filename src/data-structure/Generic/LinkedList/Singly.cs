@@ -1,9 +1,9 @@
-﻿using Ds.Helper;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace Ds.Generic.LinkedList
+﻿namespace Ds.Generic.LinkedList
 {
+    using Ds.Helper;
+    using System.Collections;
+    using System.Collections.Generic;
+
     public sealed class SinglyNode<T>
     {
         #region Private Variables

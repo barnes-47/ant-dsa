@@ -1,10 +1,9 @@
-﻿using Ds.Generic.Tree;
-using Ds.Helper;
-using System.Runtime.InteropServices;
-using Xunit;
-
-namespace Ds.Test.Generic.Tree
+﻿namespace Ds.Test.Generic.Tree
 {
+    using Ds.Generic.Tree;
+    using Ds.Helper;
+    using Xunit;
+
     public class BinarySearchTreeUtc
     {
         [Fact]

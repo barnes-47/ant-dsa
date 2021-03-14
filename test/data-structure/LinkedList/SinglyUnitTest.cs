@@ -1,9 +1,9 @@
-﻿using Ds.LinkedList;
-using System;
-using Xunit;
-
-namespace Ds.Test.LinkedList
+﻿namespace Ds.Test.LinkedList
 {
+    using Ds.LinkedList;
+    using System;
+    using Xunit;
+
     public class SinglyUnitTest
     {
         #region Private Constants

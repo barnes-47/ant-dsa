@@ -1,9 +1,9 @@
-﻿using Ds.Generic;
-using Ds.Generic.Tree;
-using System;
-
-namespace Ds.Operation
+﻿namespace Ds.Operation
 {
+    using Ds.Generic;
+    using Ds.Generic.Tree;
+    using System;
+
     public static class OnBinarySearchTree
     {
         public static void NonRecursive_InOrderTreeWalk_UsingStack<T>(

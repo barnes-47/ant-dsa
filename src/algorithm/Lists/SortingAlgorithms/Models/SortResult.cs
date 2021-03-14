@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-namespace Algo.Lists.SortingAlgorithms.Models
+﻿namespace Algo.Lists.SortingAlgorithms.Models
 {
+    using System.Collections.Generic;
+
     public class SortResult
     {
         public IList<int> Elements { get; set; } = new List<int>();

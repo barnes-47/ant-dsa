@@ -1,7 +1,7 @@
-﻿using Ds.Helper;
-
-namespace Ds.Operation
+﻿namespace Ds.Operation
 {
+    using Ds.Helper;
+
     public class OnArray
     {
         public void ToReverseIt<T>(T[] array)
