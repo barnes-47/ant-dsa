@@ -25,7 +25,7 @@
             var arrayIsDigitsSequential = new bool[numbers.Length];
             for(var i = 0; i < numbers.Length; ++i)
             {
-                arrayIsDigitsSequential[i] = IsDigitsOfTheNumberSequential(numbers[i]);
+                arrayIsDigitsSequential[i] = InternalIsDigitsOfTheNumberSequential(numbers[i]);
             }
 
             return arrayIsDigitsSequential;
